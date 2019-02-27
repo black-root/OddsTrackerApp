@@ -1,0 +1,11 @@
+.father {
+    height: 400px;
+    /*IMPORTANTE*/
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .soon {
+    width: 800px;
+  }

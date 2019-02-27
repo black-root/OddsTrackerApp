@@ -1,0 +1,7 @@
+{
+    "/v1/bet365/*": {
+        "target": "https://api.betsapi.com",
+        "secure": true,
+        "changeOrigin": true
+    }
+}

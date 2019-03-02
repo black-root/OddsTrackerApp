@@ -1,11 +1,12 @@
 <app-menu></app-menu>
 
-
-<div class="father">
+<div class="father" [hidden]="hideLeagueComponent">
   <div class="shadow p-3 mb-5 bg-white rounded soon">
     <app-league-combobox></app-league-combobox>
   </div>
 </div>
-<p>
-  track-odds works!
-</p>
+<div class="father" [hidden]="!hideLeagueComponent">
+  <div class="shadow p-3 mb-5 bg-white rounded soon">
+    <app-table-odds-in-play></app-table-odds-in-play>
+  </div>
+</div>

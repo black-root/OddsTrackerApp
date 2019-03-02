@@ -1,20 +1,52 @@
-<form>
-    <div class="form-group">
-      <label for="exampleFormControlSelect1">Example select</label>
-      <select class="form-control" id="exampleFormControlSelect1">
-        <option *ngFor="let league of inplayFilter" (click)="getMatchesInplay(league.league.id)">{{league.league.name}}</option>
-      </select>
+<form class="border border-light p-5" (ngSubmit)="f.form.valid && startRequest()" #f="ngForm">
+  
+  <p class="h4 mb-4 text-center"><strong>Track Odds's Configuration</strong> </p>
+  <p class="h4 mb-3 text-center">Matches in live</p>
+
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <div class="form-group">
+        <label for="sportFormSelectControl" class="col-sm-12 col-form-label">Sport</label>
+        <div class="col-sm-12">
+          <select class="form-control" id="sportFormSelectControl" required>
+            <option>SOCCER</option>
+          </select>
+        </div>
+      </div>
     </div>
-    <div class="form-group">
-      <label for="exampleFormControlSelect2">Example multiple select</label>
-      <select multiple class="form-control" id="exampleFormControlSelect2">
-        <option *ngFor="let match of leagueSelected">
-          {{match.home}} - {{match.away}}
+    <div class="form-group col-md-6">
+      <label for="inputIntervalTimeID" class="col-sm-12 col-form-label">Frecuency (t)</label>
+      <div class="col-sm-12">
+        <input type="number" class="form-control" id="inputIntervalTimeID" 
+        placeholder="Time in seconds" [(ngModel)]="intervalTimefrm" name="inputIntervalTimeName" required>
+      </div>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="leagueFormControlSelect1" class="col-sm-10 col-form-label">League</label>
+    <div class="col-sm-12">
+      <select class="form-control" id="leagueFormControlSelect1" required (click)="getMatchesInplay()">
+        <option>SELECT A LEAGUE</option>
+        <option *ngFor="let league of onlyLeagues" (click)="getHomeAndAway(league.id)">
+          {{league.name}}
         </option>
       </select>
     </div>
-    <div class="form-group">
-      <label for="exampleFormControlTextarea1">Example textarea</label>
-      <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+  </div>
+  <div class="form-group">
+    <label for="matchesInLiveFormControlSelect" class="col-sm-10 col-form-label">Matches In-play</label>
+    <div class="col-sm-12">
+      <select multiple class="form-control custom-select" id="matchesInLiveFormControlSelect" 
+      size="4" required>
+        <option *ngFor="let match of leagueSelected; let i = index" (click)='getIdMatch(match.id)'>
+          <font color=green> {{match.home}} </font> - <font color=red>{{match.away}}</font>
+        </option>
+      </select>
     </div>
-  </form>
+  </div>
+  <div class="form-group text-center">
+    <div class="col-sm-12">
+      <button type="submit" class="btn btn-primary btn-lg btn-block">Start</button>
+    </div>
+  </div>
+</form>

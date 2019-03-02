@@ -1,5 +1,5 @@
 .father {
-    height: 400px;
+    height: 750px;
     /*IMPORTANTE*/
     display: flex;
     justify-content: center;
@@ -7,5 +7,5 @@
   }
   
   .soon {
-    width: 800px;
+    width: 700px;
   }

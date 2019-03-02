@@ -12,28 +12,25 @@ export class DataService {
   // uri = url + urn
   private URL: string = `/v1/bet365`;
   private TOKEN: string = `17954-QbN5GSRIBZtpec`;
-  private httpOptions = {
-    headers: new HttpHeaders({
-    'Access-Control-Allow-Origin': 'https://api.betsapi.com',
-    'Content-Type': 'application/json',
-    })
-  };
-
+ 
   constructor(private http: HttpClient) {}
 
-
   getSoccerLeague() {
-    return this.http.get<InplayFilter[]>(`${this.URL}/inplay_filter?sport_id=18&token=${this.TOKEN}`);
+    // https://api.betsapi.com/v1/bet365/inplay_filter?sport_id=1&token=17954-QbN5GSRIBZtpec
+    return this.http.get<InplayFilter[]>(`${this.URL}/inplay_filter?sport_id=1&token=${this.TOKEN}`);
   }
 // IdMatch = "FI inPlay" or "ID inPlayFilter"
   getSoccerInplayEvent(IdMatch: number) {
     return this.http.get(`${this.URL}/event?token=${this.TOKEN}&FI=${IdMatch}`);
   }
 
-  rqDataTimer(urn: string, startTime: number = 0, intervalTime: number = 1000) {
-    return timer(startTime, intervalTime)
+  // "FI" is the id of the getSoccerLeague
+  rqDataTimer(FI: any, startTime: number = 0, intervalTime: number = 1000) {
+    console.log(`rqDataTimer(): FI: ${FI}, startTime: ${startTime}, Interval Time: ${intervalTime}`);
+    return timer(startTime, intervalTime )
       .pipe(
-        switchMap(_ => this.http.get(`${this.URL}/${urn}token=${this.TOKEN}`)),
+        // https://api.betsapi.com/v1/bet365/event?FI=79239507&token=17954-QbN5GSRIBZtpec
+        switchMap(_ => this.http.get(`${this.URL}/event?FI=${FI}&token=${this.TOKEN}`)),
         catchError(error => of(`Bad request: ${error}`))
       );
   }

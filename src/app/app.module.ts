@@ -12,7 +12,7 @@ import { MenuComponent } from './menu/menu.component';
 import { HomeComponent } from './menu/home/home.component';
 import { TrackOddsComponent } from './menu/track-odds/track-odds.component';
 import { LeagueComboboxComponent } from './menu/track-odds/league-combobox/league-combobox.component';
-
+import { TableOddsInPlayComponent } from './menu/track-odds/table-odds-in-play/table-odds-in-play.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +20,8 @@ import { LeagueComboboxComponent } from './menu/track-odds/league-combobox/leagu
     MenuComponent,
     HomeComponent,
     TrackOddsComponent,
-    LeagueComboboxComponent
+    LeagueComboboxComponent,
+    TableOddsInPlayComponent
   ],
   imports: [
     BrowserModule,

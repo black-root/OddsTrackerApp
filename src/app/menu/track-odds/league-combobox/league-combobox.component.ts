@@ -120,10 +120,11 @@ export class LeagueComboboxComponent implements OnInit, OnDestroy {
             tie_Odds: data['results'][0][38]['OD'],
             team2WO_Odds: data['results'][0][39]['OD']
           });
+          this.trackOddsService.inPlayGame.emit(this.inPlayGameStat);
           console.log(this.inPlayGameStat);
           this.count++;
           // this.storeArray[this.count] = data;
-          if (this.count >= 2) {// a los 10 segundos se detiene
+          if (this.count >= 15) {// a los 10 segundos se detiene
             this.stopSubscribe();
             this.count = 0;
             // se envia el array al servcio

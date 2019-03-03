@@ -1,5 +1,6 @@
 import {Subject} from 'rxjs';
 import {EventEmitter, Injectable} from '@angular/core';
+import { InPlayGame } from './league-combobox/table-odds-inplay.model';
 
 @Injectable()
 export class TrackOddsService {
@@ -7,4 +8,5 @@ export class TrackOddsService {
 
     hideLeagueComponent = new EventEmitter<boolean>(false);
     parameterInPlayTable = new EventEmitter<{FI: any, startTime: number, intervalTime: number}>();
+    inPlayGame = new EventEmitter<InPlayGame[]>();
 }

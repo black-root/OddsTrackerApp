@@ -1,3 +1,35 @@
-<p>
-  table-odds-in-play works!
-</p>
+<blockquote class="blockquote text-center">
+  <p class="mb-0">Deutsche Sporthochschule Koln</p>
+  <footer class="blockquote-footer">In Play Game <cite title="Source Title">2019</cite></footer>
+</blockquote>
+<div>
+<button type="submit" (click)="exportAsXLSX()"  class="btn btn-dark"> 
+    Excel File
+</button>
+</div><br>
+<table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table" id="sport-table">
+<thead class="thead-dark">
+  <tr>
+    <th scope="col">N</th>
+    <th scope="col">Date</th>
+    <th scope="col">Bet365 Time</th>
+    <th scope="col">Local Time</th>
+    <th scope="col">Score</th>
+    <th scope="col">Team1 WO</th>
+    <th scope="col">Tie</th>
+    <th scope="col">Team2 WO</th>
+  </tr>
+</thead>
+<tbody>
+  <tr *ngFor='let gameBySecond of inPlayGameStat; let i = index'>
+    <th scope="row">{{i+1}}</th>
+    <td>{{gameBySecond.date}}</td>
+    <td>{{gameBySecond.apiTime}}</td>
+    <td>{{gameBySecond.localTime}}</td>
+    <td>{{gameBySecond.score}}</td>
+    <td>{{gameBySecond.team1WO_Odds}}</td>
+    <td>{{gameBySecond.tie_Odds}}</td>
+    <td>{{gameBySecond.team2WO_Odds}}</td>
+  </tr>
+</tbody>
+</table>

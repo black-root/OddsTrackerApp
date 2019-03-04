@@ -5,8 +5,8 @@
     <app-league-combobox></app-league-combobox>
   </div>
 </div>
-<div class="father" [hidden]="!hideLeagueComponent">
-  <div class="shadow p-3 mb-5 bg-white rounded soon">
+<div class="father2" *ngIf="hideLeagueComponent">
+  <div class="shadow p-3 mb-5 bg-white rounded soon2">
     <app-table-odds-in-play></app-table-odds-in-play>
   </div>
 </div>

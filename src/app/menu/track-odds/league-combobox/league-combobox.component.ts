@@ -116,9 +116,9 @@ export class LeagueComboboxComponent implements OnInit, OnDestroy {
             date: this.convertStringToDate(data['results'][0][0]['TU'], 'date'),
             localTime: local_Time,
             score: data['results'][0][0]['SS'],
-            team1WO_Odds: data['results'][0][37]['OD'],
-            tie_Odds: data['results'][0][38]['OD'],
-            team2WO_Odds: data['results'][0][39]['OD']
+            team1WO_Odds: this.stringToDecimal(data['results'][0][37]['OD']),
+            tie_Odds: this.stringToDecimal(data['results'][0][38]['OD']),
+            team2WO_Odds: this.stringToDecimal(data['results'][0][39]['OD'])
           });
           this.trackOddsService.inPlayGame.emit(this.inPlayGameStat);
           console.log(this.inPlayGameStat);
@@ -151,15 +151,22 @@ export class LeagueComboboxComponent implements OnInit, OnDestroy {
     let result = new Date(m[1], m[2] - 1, m[3], m[4], m[5], m[6]);
 
     if (dt === 'date') {
-        console.log(result.toLocaleDateString());
-        return result.toLocaleDateString();
-    } else if ( dt === 'time') {
-        console.log(result.toLocaleTimeString('en-US', { hour12: false }));
-        return result.toLocaleTimeString('en-US', { hour12: false });
+      console.log(result.toLocaleDateString());
+      return result.toLocaleDateString();
+    } else if (dt === 'time') {
+      console.log(result.toLocaleTimeString('en-US', { hour12: false }));
+      return result.toLocaleTimeString('en-US', { hour12: false });
     } else {
-        return null;
+      return null;
     }
-}
+  }
+
+  stringToDecimal(cadena: any): number {
+    cadena = cadena.split("/");
+    let result = 1 + cadena[0] / cadena[1];
+    let result2: any = result.toFixed(2);
+    return result2;
+  }
 
 }
 

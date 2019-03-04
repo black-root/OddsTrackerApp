@@ -9,3 +9,14 @@
   .soon {
     width: 700px;
   }
+
+.father2 {
+  height: 600px;
+  /*IMPORTANTE*/
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.soon2 {
+  width: 1000px;
+}

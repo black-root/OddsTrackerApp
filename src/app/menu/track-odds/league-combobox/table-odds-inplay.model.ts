@@ -4,7 +4,7 @@ export class InPlayGame {
     date: Date;
     localTime: string;
     score: string;
-    team1WO_Odds: string;
-    tie_Odds: string;
-    team2WO_Odds: string;
+    team1WO_Odds: number;
+    tie_Odds: number;
+    team2WO_Odds: number;
 }

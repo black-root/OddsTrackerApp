@@ -66,6 +66,16 @@ export class LeagueComboboxComponent implements OnInit, OnDestroy {
         // console.log(this.onlyLeagues);
       }
     }
+    this.onlyLeagues.sort(function (a, b) {
+      if (a.name > b.name) {
+        return 1;
+      }
+      if (a.name < b.name) {
+        return -1;
+      }
+      // a must be equal to b
+      return 0;
+    });
   }
 
   cleanLeagueSelected() {
@@ -84,7 +94,6 @@ export class LeagueComboboxComponent implements OnInit, OnDestroy {
         });
       }
     }
-    //console.log(this.leagueSelected);
   }
 
   getIdMatch(id: number) {

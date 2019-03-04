@@ -9,4 +9,5 @@ export class TrackOddsService {
     hideLeagueComponent = new EventEmitter<boolean>(false);
     parameterInPlayTable = new EventEmitter<{FI: any, startTime: number, intervalTime: number}>();
     inPlayGame = new EventEmitter<InPlayGame[]>();
+    nameLeagueSelected = new EventEmitter <{league: string, teams: string}>();
 }

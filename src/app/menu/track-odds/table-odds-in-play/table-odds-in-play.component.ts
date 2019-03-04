@@ -27,7 +27,8 @@ export class TableOddsInPlayComponent implements OnInit, OnDestroy, AfterViewIni
   flag: boolean = false;
   dtOptions: DataTables.Settings = {};
   dtTrigger: Subject<any> = new Subject();
-
+  league: string;
+  teams: string;
 
 
   constructor(private dataService: DataService, private trackOddsService: TrackOddsService, private excelService: ExcelExportService) {
@@ -43,6 +44,12 @@ export class TableOddsInPlayComponent implements OnInit, OnDestroy, AfterViewIni
         this.rerender();
         console.log(this.inPlayGameStat);
       });
+    this.trackOddsService.nameLeagueSelected.subscribe(
+      (headerTable: any) => {
+        this.league = headerTable['league'];
+        this.teams = headerTable['teams'];
+      }
+    );
   }
 
   ngOnInit() {

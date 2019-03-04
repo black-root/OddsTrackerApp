@@ -85,6 +85,7 @@ export class LeagueComboboxComponent implements OnInit, OnDestroy {
   // This method take the data from  inplayFilter just to get the names {home and away}
   getHomeAndAway(idLeagueLocal: number) {
     this.cleanLeagueSelected();
+    let index;
     for (let i = 0; this.inplayFilter.length > i; i++) {
       if (this.inplayFilter[i].league.id === idLeagueLocal) {
         this.leagueSelected.push({
@@ -92,6 +93,7 @@ export class LeagueComboboxComponent implements OnInit, OnDestroy {
           home: this.inplayFilter[i].home.name,
           away: this.inplayFilter[i].away.name
         });
+        index = i;
       }
     }
   }
@@ -119,6 +121,10 @@ export class LeagueComboboxComponent implements OnInit, OnDestroy {
         this.FI, 0, this.intervalTimefrm)
         .pipe(takeUntil(this.unsubscribe))
         .subscribe(data => {
+          this.trackOddsService.nameLeagueSelected.emit({
+            league: data['results'][0][0]['CT'],
+            teams: data['results'][0][0]['NA']
+          });
           let local_Time = new Date().toLocaleTimeString('en-US', { hour12: false });
           this.inPlayGameStat.push({
             apiTime: this.convertStringToDate(data['results'][0][0]['TU'], 'time'),

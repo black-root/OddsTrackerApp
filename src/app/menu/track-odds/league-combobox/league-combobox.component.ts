@@ -12,7 +12,7 @@ import { InPlayGame } from './table-odds-inplay.model';
   templateUrl: './league-combobox.component.html',
   styleUrls: ['./league-combobox.component.css']
 })
-export class LeagueComboboxComponent implements OnInit, OnDestroy {
+export class LeagueComboboxComponent implements OnInit {
 
   private idLeagueLocal: number;
   inplayFilter: InplayFilter[];
@@ -152,10 +152,6 @@ export class LeagueComboboxComponent implements OnInit, OnDestroy {
   private stopSubscribe() {
     this.unsubscribe.next();
     this.unsubscribe.complete();
-    this.ngOnDestroy();
-  }
-
-  ngOnDestroy() {
     this.subscription.unsubscribe();
     console.log('[takeUntil] complete');
   }

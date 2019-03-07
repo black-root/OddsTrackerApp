@@ -5,7 +5,7 @@ import { TrackOddsService } from '../track-odds.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { InPlayGame } from './table-odds-inplay.model';
-
+import { FormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-league-combobox',
@@ -13,7 +13,7 @@ import { InPlayGame } from './table-odds-inplay.model';
   styleUrls: ['./league-combobox.component.css']
 })
 export class LeagueComboboxComponent implements OnInit {
-
+  leagueChoosed: boolean = false;
   private idLeagueLocal: number;
   inplayFilter: InplayFilter[];
   onlyLeagues: OnlyLeagues[] = [];
@@ -22,7 +22,6 @@ export class LeagueComboboxComponent implements OnInit {
   FI: number;
   intervalTimefrm: number;
 
-
   //table
   // variable is necesary to stop the suscription
   private unsubscribe: Subject<void> = new Subject();
@@ -30,7 +29,8 @@ export class LeagueComboboxComponent implements OnInit {
   count: number = 0;
   inPlayGameStat: InPlayGame[] = [];
 
-  constructor(private dataService: DataService, private trackOddsService: TrackOddsService) { }
+  constructor(private dataService: DataService, private trackOddsService: TrackOddsService) {
+  }
 
   hideComponent() {
     this.trackOddsService.hideLeagueComponent.emit(true);
@@ -84,6 +84,7 @@ export class LeagueComboboxComponent implements OnInit {
   }
   // This method take the data from  inplayFilter just to get the names {home and away}
   getHomeAndAway(idLeagueLocal: number) {
+    this.leagueChoosed = true;
     this.cleanLeagueSelected();
     let index;
     for (let i = 0; this.inplayFilter.length > i; i++) {
@@ -113,6 +114,7 @@ export class LeagueComboboxComponent implements OnInit {
 
   startRequest() {
     if (this.FI != null && this.FI !== 0 && this.intervalTimefrm > 0) {
+      this.leagueChoosed = false;
       this.trackOddsService.hideLeagueComponent.emit(true);
       this.intervalTimefrm = this.intervalTimefrm * 1000;
       console.log(`FI: ${this.FI}, Interval Time: ${this.intervalTimefrm}`);
@@ -121,15 +123,20 @@ export class LeagueComboboxComponent implements OnInit {
         this.FI, 0, this.intervalTimefrm)
         .pipe(takeUntil(this.unsubscribe))
         .subscribe(data => {
+          // TU: any, TT: any, TM: any, TS: any
           this.trackOddsService.nameLeagueSelected.emit({
             league: data['results'][0][0]['CT'],
             teams: data['results'][0][0]['NA']
           });
-          let local_Time = new Date().toLocaleTimeString('en-US', { hour12: false });
+          let local_Time = new Date().toLocaleTimeString('en-GB', { timeZone: 'Europe/London' });
           this.inPlayGameStat.push({
-            apiTime: this.convertStringToDate(data['results'][0][0]['TU'], 'time'),
-            date: this.convertStringToDate(data['results'][0][0]['TU'], 'date'),
             localTime: local_Time,
+            apiTime: this.getTimeInPlay(
+              data['results'][0][0]['TU'],
+              data['results'][0][0]['TT'],
+              data['results'][0][0]['TM'],
+              data['results'][0][0]['TS']),
+            date: this.convertStringToDate(data['results'][0][0]['TU'], 'date'),
             score: data['results'][0][0]['SS'],
             team1WO_Odds: this.stringToDecimal(data['results'][0][37]['OD']),
             tie_Odds: this.stringToDecimal(data['results'][0][38]['OD']),
@@ -166,7 +173,7 @@ export class LeagueComboboxComponent implements OnInit {
       return result.toLocaleDateString();
     } else if (dt === 'time') {
       console.log(result.toLocaleTimeString('en-US', { hour12: false }));
-      return result.toLocaleTimeString('en-US', { hour12: false });
+      return result.toLocaleTimeString();
     } else {
       return null;
     }
@@ -179,5 +186,40 @@ export class LeagueComboboxComponent implements OnInit {
     return result2;
   }
 
+  getTimeInPlay(TU: any, TT: any, TM: any, TS: any) {
+    let apiTime = this.convertStringToDate(TU, 'time'); // bet365
+    let horaEngland = new Date();
+    let hora1 = horaEngland.toLocaleTimeString('en-GB', { timeZone: 'Europe/London' }).split(":");
+    let hora2 = apiTime.split(":");
+    let t1 = new Date();
+    let t2 = new Date();
+    let time = 0;
+
+    t1.setHours(Number(hora1[0]), Number(hora1[1]), Number(hora1[2]));
+    t2.setHours(Number(hora2[0]), Number(hora2[1]), Number(hora2[2]));
+
+    //Aquí hago la resta
+    t1.setHours(t1.getHours() - t2.getHours(), t1.getMinutes() - t2.getMinutes(), t1.getSeconds() - t2.getSeconds());
+    let segundos = t1.getHours() * 60 * 60 + t1.getMinutes() * 60 + t1.getSeconds();
+    console.log(`TT es: ${TT}, TM: ${TM}, TS: ${TS}, segundos: ${segundos}`);
+    if (TT === `1`) {
+      time = segundos + (Number(TM) * 60) + Number(TS);
+      console.log(`seconds ${time}`);
+    } else {
+      time = Number(TM) * 60 + Number(TS);
+      console.log(`seconds ${time}`);
+    }
+    //Imprimo el resultado
+    let date = new Date(null);
+    let t3 = new Date();
+    date.setSeconds(time); // specify value for SECONDS here
+    let result = date.toISOString().substr(11, 8);
+    console.log(result);
+    let time2 = result.split(":");
+    t3.setHours(Number(time2[0]), Number(time2[1]), Number(time2[2]));
+    let minutes = t3.getMinutes() + t3.getHours() * 60;
+    console.log(`El tiempo de Bet365 es ${minutes}:${t3.getSeconds()} `);
+    return `${minutes}:${t3.getSeconds()}`;
+  }
 }
 

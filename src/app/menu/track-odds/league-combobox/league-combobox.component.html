@@ -1,5 +1,5 @@
 <form class="border border-light p-5" (ngSubmit)="f.form.valid && startRequest()" #f="ngForm">
-  
+
   <p class="h4 mb-4 text-center"><strong>Track Odds's Configuration</strong> </p>
   <p class="h4 mb-3 text-center">Matches in live</p>
 
@@ -17,8 +17,8 @@
     <div class="form-group col-md-6">
       <label for="inputIntervalTimeID" class="col-sm-12 col-form-label">Frecuency (t)</label>
       <div class="col-sm-12">
-        <input type="number" class="form-control" id="inputIntervalTimeID" 
-        placeholder="Time in seconds" [(ngModel)]="intervalTimefrm" name="inputIntervalTimeName" required>
+        <input type="number" class="form-control" id="inputIntervalTimeID" placeholder="Time in seconds"
+          [(ngModel)]="intervalTimefrm" name="inputIntervalTimeName" required>
       </div>
     </div>
   </div>
@@ -35,13 +35,13 @@
   </div>
   <div class="form-group">
     <label for="matchesInLiveFormControlSelect" class="col-sm-10 col-form-label">Matches In-play</label>
-    <div class="col-sm-12">
-      <select multiple class="form-control custom-select" id="matchesInLiveFormControlSelect" 
-      size="4" required>
-        <option *ngFor="let match of leagueSelected; let i = index" (click)='getIdMatch(match.id)'>
-          <font color=green> {{match.home}} </font> - <font color=red>{{match.away}}</font>
-        </option>
-      </select>
+    <div class="container">
+      <mat-radio-group class="example-radio-group" name="s" [(ngModel)]="FI" *ngIf=leagueChoosed>
+        <mat-radio-button class="example-radio-button" *ngFor="let match of leagueSelected; let i = index"
+          [value]="match.id">
+          <font color=green> {{match.home}}</font><font color=black> - </font><font color=red>{{match.away}}</font>
+        </mat-radio-button>
+      </mat-radio-group>
     </div>
   </div>
   <div class="form-group text-center">

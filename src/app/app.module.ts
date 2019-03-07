@@ -13,7 +13,9 @@ import { HomeComponent } from './menu/home/home.component';
 import { TrackOddsComponent } from './menu/track-odds/track-odds.component';
 import { LeagueComboboxComponent } from './menu/track-odds/league-combobox/league-combobox.component';
 import { TableOddsInPlayComponent } from './menu/track-odds/table-odds-in-play/table-odds-in-play.component';
-
+import {MatInputModule} from '@angular/material/input';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {MatRadioModule} from '@angular/material/radio';
 @NgModule({
   declarations: [
     AppComponent,
@@ -28,7 +30,10 @@ import { TableOddsInPlayComponent } from './menu/track-odds/table-odds-in-play/t
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
-    DataTablesModule
+    DataTablesModule,
+    MatInputModule,
+    BrowserAnimationsModule,
+    MatRadioModule
   ],
   providers: [DataService, Subject, ExcelExportService],
   bootstrap: [AppComponent]

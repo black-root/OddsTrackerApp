@@ -1,0 +1,20 @@
+.example-radio-group {
+  display: inline-flex;
+  flex-direction: column;
+}
+
+.example-radio-button {
+  margin: 5px;
+}
+
+.example-selected-value {
+  margin: 15px 0;
+}
+.container {
+  height: 100px;
+  /*IMPORTANTE*/
+  color: #F0FFFF;
+  display: inline-flex;
+  flex-direction: column;
+  width: 100px;
+}

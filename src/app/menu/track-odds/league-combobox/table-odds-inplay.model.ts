@@ -1,8 +1,8 @@
 export class InPlayGame {
     constructor() { }
-    apiTime: Date;
-    date: Date;
     localTime: string;
+    apiTime: any;
+    date: Date;
     score: string;
     team1WO_Odds: number;
     tie_Odds: number;

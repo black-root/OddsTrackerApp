@@ -56,7 +56,7 @@ export class TableOddsInPlayComponent implements OnInit, OnDestroy, AfterViewIni
 
     this.dtOptions = {
       pagingType: 'full_numbers',
-      pageLength: 5
+      pageLength: 10
     };
   }
   ngAfterViewInit(): void {

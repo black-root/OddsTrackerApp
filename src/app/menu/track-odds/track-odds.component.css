@@ -11,12 +11,8 @@
   }
 
 .father2 {
-  height: 600px;
-  /*IMPORTANTE*/
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  text-align: center;
 }
 .soon2 {
-  width: 1000px;
+  display: inline-block;
 }

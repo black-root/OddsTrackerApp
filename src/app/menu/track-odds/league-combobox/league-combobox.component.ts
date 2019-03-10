@@ -21,6 +21,7 @@ export class LeagueComboboxComponent implements OnInit {
   flagCall: number = 0; // variable que sirve para que no se haga doble request al clickear el select
   FI: number;
   intervalTimefrm: number;
+  requestNumber: number;
 
   //table
   // variable is necesary to stop the suscription
@@ -146,7 +147,7 @@ export class LeagueComboboxComponent implements OnInit {
           console.log(this.inPlayGameStat);
           this.count++;
           // this.storeArray[this.count] = data;
-          if (this.count >= 15) {// a los 10 segundos se detiene
+          if (this.count >= this.requestNumber) {// a los 10 segundos se detiene
             this.stopSubscribe();
             this.count = 0;
             // se envia el array al servcio

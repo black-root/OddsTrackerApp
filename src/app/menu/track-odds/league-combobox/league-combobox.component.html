@@ -2,11 +2,10 @@
 
   <p class="h4 mb-4 text-center"><strong>Track Odds's Configuration</strong> </p>
   <p class="h4 mb-3 text-center">Matches in live</p>
-
   <div class="form-row">
-    <div class="form-group col-md-6">
+    <div class="form-group col-md-4">
       <div class="form-group">
-        <label for="sportFormSelectControl" class="col-sm-12 col-form-label">Sport</label>
+        <label for="sportFormSelectControl" class="col-sm-4 col-form-label">Sport</label>
         <div class="col-sm-12">
           <select class="form-control" id="sportFormSelectControl" required>
             <option>SOCCER</option>
@@ -14,23 +13,16 @@
         </div>
       </div>
     </div>
-    <div class="form-group col-md-6">
-      <label for="inputIntervalTimeID" class="col-sm-12 col-form-label">Frecuency (t)</label>
+    <div class="form-group col-md-8">
+      <label for="leagueFormControlSelect1" class="col-sm-8 col-form-label">League</label>
       <div class="col-sm-12">
-        <input type="number" class="form-control" id="inputIntervalTimeID" placeholder="Time in seconds"
-          [(ngModel)]="intervalTimefrm" name="inputIntervalTimeName" required>
+        <select class="form-control" id="leagueFormControlSelect1" required (click)="getMatchesInplay()">
+          <option>SELECT A LEAGUE</option>
+          <option *ngFor="let league of onlyLeagues" (click)="getHomeAndAway(league.id)">
+            {{league.name}}
+          </option>
+        </select>
       </div>
-    </div>
-  </div>
-  <div class="form-group">
-    <label for="leagueFormControlSelect1" class="col-sm-10 col-form-label">League</label>
-    <div class="col-sm-12">
-      <select class="form-control" id="leagueFormControlSelect1" required (click)="getMatchesInplay()">
-        <option>SELECT A LEAGUE</option>
-        <option *ngFor="let league of onlyLeagues" (click)="getHomeAndAway(league.id)">
-          {{league.name}}
-        </option>
-      </select>
     </div>
   </div>
   <div class="form-group">
@@ -42,6 +34,22 @@
           <font color=green> {{match.home}}</font><font color=black> - </font><font color=red>{{match.away}}</font>
         </mat-radio-button>
       </mat-radio-group>
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <label for="inputIntervalTimeID" class="col-sm-12 col-form-label">Frecuency (t)</label>
+      <div class="col-sm-12">
+        <input type="number" class="form-control" id="inputIntervalTimeID" placeholder="Time in seconds"
+          [(ngModel)]="intervalTimefrm" name="inputIntervalTimeName" required>
+      </div>
+    </div>
+    <div class="form-group col-md-6">
+      <label for="inputIntervalRequestNumberID" class="col-sm-12 col-form-label">Request Number</label>
+      <div class="col-sm-12">
+        <input type="number" class="form-control" id="inputIntervalRequestNumberID" placeholder="Request Number"
+          [(ngModel)]="requestNumber" name="inputIntervalRequestNumber" required>
+      </div>
     </div>
   </div>
   <div class="form-group text-center">

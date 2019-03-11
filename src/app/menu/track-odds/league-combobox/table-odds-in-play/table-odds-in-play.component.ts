@@ -1,9 +1,9 @@
 import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild } from '@angular/core';
 import { DataService } from 'src/app/services/data.service';
 import { Subject } from 'rxjs';
-import { TrackOddsService } from '../track-odds.service';
-import { InPlayGame } from '../league-combobox/table-odds-inplay.model';
-import { ExcelExportService } from '../../../services/excel-export.service';
+import { TrackOddsService } from '../../track-odds.service';
+import { InPlayGame } from '../../league-combobox/table-odds-inplay.model';
+import { ExcelExportService } from '../../../../services/excel-export.service';
 import { takeUntil } from 'rxjs/operators';
 import { DataTableDirective } from 'angular-datatables';
 

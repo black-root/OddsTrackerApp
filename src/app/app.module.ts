@@ -12,10 +12,11 @@ import { MenuComponent } from './menu/menu.component';
 import { HomeComponent } from './menu/home/home.component';
 import { TrackOddsComponent } from './menu/track-odds/track-odds.component';
 import { LeagueComboboxComponent } from './menu/track-odds/league-combobox/league-combobox.component';
-import { TableOddsInPlayComponent } from './menu/track-odds/table-odds-in-play/table-odds-in-play.component';
+import { TableOddsInPlayComponent } from './menu/track-odds/league-combobox/table-odds-in-play/table-odds-in-play.component';
 import {MatInputModule} from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatRadioModule} from '@angular/material/radio';
+import { UpcomingEventComponent } from './menu/track-odds/upcoming-event/upcoming-event.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -23,7 +24,8 @@ import {MatRadioModule} from '@angular/material/radio';
     HomeComponent,
     TrackOddsComponent,
     LeagueComboboxComponent,
-    TableOddsInPlayComponent
+    TableOddsInPlayComponent,
+    UpcomingEventComponent
   ],
   imports: [
     BrowserModule,

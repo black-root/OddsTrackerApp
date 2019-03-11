@@ -1,4 +1,3 @@
-import {Subject} from 'rxjs';
 import {EventEmitter, Injectable} from '@angular/core';
 import { InPlayGame } from './league-combobox/table-odds-inplay.model';
 

@@ -16,7 +16,9 @@ import { TableOddsInPlayComponent } from './menu/track-odds/league-combobox/tabl
 import {MatInputModule} from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatRadioModule} from '@angular/material/radio';
-import { UpcomingEventComponent } from './menu/track-odds/upcoming-event/upcoming-event.component';
+import { UpcomingEventComponent } from './menu/upcoming-event/upcoming-event.component';
+import {ScrollDispatchModule} from '@angular/cdk/scrolling';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -35,7 +37,8 @@ import { UpcomingEventComponent } from './menu/track-odds/upcoming-event/upcomin
     DataTablesModule,
     MatInputModule,
     BrowserAnimationsModule,
-    MatRadioModule
+    MatRadioModule,
+    ScrollDispatchModule
   ],
   providers: [DataService, Subject, ExcelExportService],
   bootstrap: [AppComponent]

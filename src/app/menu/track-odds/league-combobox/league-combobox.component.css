@@ -11,10 +11,17 @@
   margin: 15px 0;
 }
 .container {
+  width: 100%;
+}
+
+.example-viewport {
   height: 100px;
-  /*IMPORTANTE*/
-  color: #F0FFFF;
-  display: inline-flex;
-  flex-direction: column;
-  width: 100px;
+  display: flex;
+  border: 1px solid black;
+  justify-content: center;
+  align-items: center;
+}
+
+.example-item {
+  height: 30px;
 }

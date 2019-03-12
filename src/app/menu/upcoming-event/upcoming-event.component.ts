@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 
 
 @Component({
@@ -8,11 +9,12 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UpcomingEventComponent implements OnInit {
-
+  isLinear = false;
+  firstFormGroup: FormGroup;
+  secondFormGroup: FormGroup;
   constructor() { }
 
   ngOnInit() {
   }
-  items = Array.from({length: 100000}).map((_, i) => `Item #${i}`);
 
 }

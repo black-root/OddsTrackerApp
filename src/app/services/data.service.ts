@@ -34,4 +34,8 @@ export class DataService {
         catchError(error => of(`Bad request: ${error}`))
       );
   }
+
+  getSoccerUpcomingEventLeague() {
+    return this.http.get<InplayFilter[]>(`${this.URL}/upcoming?sport_id=1&token=${this.TOKEN}`);
+  }
 }

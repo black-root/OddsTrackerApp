@@ -6,7 +6,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { Subject } from 'rxjs';
 import {HttpClientModule} from '@angular/common/http';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { DataTablesModule } from 'angular-datatables';
 import { MenuComponent } from './menu/menu.component';
 import { HomeComponent } from './menu/home/home.component';
@@ -18,6 +18,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatRadioModule} from '@angular/material/radio';
 import { UpcomingEventComponent } from './menu/upcoming-event/upcoming-event.component';
 import {ScrollDispatchModule} from '@angular/cdk/scrolling';
+import {MatStepperModule} from '@angular/material/stepper';
+import { FormUpcomingEventComponent } from './menu/upcoming-event/form-upcoming-event/form-upcoming-event.component';
+import {MatSelectModule} from '@angular/material/select';
 
 @NgModule({
   declarations: [
@@ -27,18 +30,22 @@ import {ScrollDispatchModule} from '@angular/cdk/scrolling';
     TrackOddsComponent,
     LeagueComboboxComponent,
     TableOddsInPlayComponent,
-    UpcomingEventComponent
+    UpcomingEventComponent,
+    FormUpcomingEventComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
+    ReactiveFormsModule,
     DataTablesModule,
     MatInputModule,
     BrowserAnimationsModule,
     MatRadioModule,
-    ScrollDispatchModule
+    ScrollDispatchModule,
+    MatStepperModule,
+    MatSelectModule
   ],
   providers: [DataService, Subject, ExcelExportService],
   bootstrap: [AppComponent]

@@ -1,9 +1,11 @@
-.example-viewport {
-    height: 30%;
-    width: 30%;
-    border: 1px solid black;
-  }
-  
-  .example-item {
-    height: 100%;
-  }
+.father {
+  height: 750px;
+  /*IMPORTANTE*/
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.soon {
+  width: 700px;
+}

@@ -20,7 +20,8 @@ export class FormUpcomingEventComponent implements OnInit {
   league_idSelected: number = 0;
   requestNumber: number;
   intervalTimefrm: number;
-  waitTime: number;
+  waitTime: any;
+  FI: number;
 
   constructor(private formBuilder: FormBuilder, private dataService: DataService) { }
 
@@ -49,10 +50,12 @@ export class FormUpcomingEventComponent implements OnInit {
       });
   }
 
-  timeToWait(eventTime: Date) {
+  timeToWait(eventTime: number) {
     let localTime = new Date();
-    let waitTSeconds = Math.abs(eventTime.getTime() - localTime.getTime());
-    waitTSeconds = waitTSeconds / 1000;
+    let upcomingTime = new Date(eventTime * 1000);
+    let waitTSeconds = Math.abs(upcomingTime.getTime() - localTime.getTime());
+    this.waitTime = waitTSeconds / 1000;
+    console.log(this.waitTime);
     return waitTSeconds;
   }
 
@@ -100,6 +103,7 @@ export class FormUpcomingEventComponent implements OnInit {
   }
 
   getUpcomingEventsByLeague() {
+    this.secondFormGroup.controls['secondCtrl'].reset();
     this.dataService.getSoccerUpcomingEvent(this.league_idSelected)
       .subscribe(data => {
         this.leagueUpComingEvent = data['results'];

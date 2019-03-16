@@ -6,7 +6,7 @@
       <ng-template matStepLabel>Select a league</ng-template>
       <mat-form-field id="selectLeague">
         <mat-select placeholder="League" formControlName="firstCtrl">
-          <mat-option *ngFor="let league of onlyLeagues" (click)="getLeagueIdSelected(league.id)" value="valid">
+          <mat-option *ngFor="let league of onlyLeagues"  (click)="getLeagueIdSelected(league.id)" value="valid">
             {{league.name}}
           </mat-option>
         </mat-select>
@@ -23,9 +23,9 @@
       <cdk-virtual-scroll-viewport itemSize="10" class="example-viewport">
         <div class="container">
           <div class="example-item">
-            <mat-radio-group class="example-radio-group" name="ss"  formControlName="secondCtrl">
+            <mat-radio-group class="example-radio-group" name="ss"  formControlName="secondCtrl" [(ngModel)]="FI">
               <mat-radio-button class="example-radio-button" *ngFor="let match of leagueUpComingEvent; let i = index"
-                value="valid" >
+              [value]="match.id"  (click) = "timeToWait(match.time)">
                 <font color=green> {{match.home.name}}</font>
                 <font color=black> - </font>
                 <font color=red>{{match.away.name}}</font> 

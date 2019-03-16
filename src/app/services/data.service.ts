@@ -38,4 +38,8 @@ export class DataService {
   getSoccerUpcomingEventLeague() {
     return this.http.get<InplayFilter[]>(`${this.URL}/upcoming?sport_id=1&token=${this.TOKEN}`);
   }
+
+  getSoccerUpcomingEvent(league_id: number) {
+    return this.http.get<InplayFilter[]>(`${this.URL}/upcoming?sport_id=1&league_id=${league_id}&token=${this.TOKEN}`);
+  }
 }

@@ -6,7 +6,7 @@ export class UpcomingEvent {
     constructor() {}
     id: number;
     sport_id: number;
-    time: number;
+    time: any;
     time_status: number;
     league: League;
     home: Home;

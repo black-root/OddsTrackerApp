@@ -21,6 +21,7 @@ import {ScrollDispatchModule} from '@angular/cdk/scrolling';
 import {MatStepperModule} from '@angular/material/stepper';
 import { FormUpcomingEventComponent } from './menu/upcoming-event/form-upcoming-event/form-upcoming-event.component';
 import {MatSelectModule} from '@angular/material/select';
+import { ErrorStateMatcher, ShowOnDirtyErrorStateMatcher } from '@angular/material/core';
 
 @NgModule({
   declarations: [
@@ -47,7 +48,8 @@ import {MatSelectModule} from '@angular/material/select';
     MatStepperModule,
     MatSelectModule
   ],
-  providers: [DataService, Subject, ExcelExportService],
+  providers: [DataService, Subject, ExcelExportService,
+    {provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher}],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

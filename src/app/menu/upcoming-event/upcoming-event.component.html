@@ -1,6 +1,11 @@
 <app-menu></app-menu>
-<div class="father">
-    <div class="shadow p-3 mb-5 bg-white rounded soon">
-      <app-form-upcoming-event></app-form-upcoming-event>
-    </div>
+<div class="father" [hidden]="hideLeagueComponent">
+  <div class="shadow p-3 mb-5 bg-white rounded soon">
+    <app-form-upcoming-event></app-form-upcoming-event>
   </div>
+</div>
+<div class="father3" *ngIf="hideLeagueComponent">
+  <div class="shadow p-3 mb-5 bg-white rounded soon3">
+    <app-table-odds-in-play></app-table-odds-in-play>
+  </div>
+</div>

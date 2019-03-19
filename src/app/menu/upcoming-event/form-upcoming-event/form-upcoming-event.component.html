@@ -3,35 +3,35 @@
 <mat-vertical-stepper [linear]="isLinear" #stepper>
   <mat-step [stepControl]="firstFormGroup">
     <form [formGroup]="firstFormGroup">
-      <ng-template matStepLabel>Select a league</ng-template>
+      <ng-template matStepLabel>Select a League</ng-template>
       <mat-form-field id="selectLeague">
         <mat-select placeholder="League" formControlName="firstCtrl">
-          <mat-option *ngFor="let league of onlyLeagues"  (click)="getLeagueIdSelected(league.id)" value="valid">
+          <mat-option *ngFor="let league of onlyLeagues" (click)="getLeagueIdSelected(league.id)" value="valid">
             {{league.name}}
           </mat-option>
         </mat-select>
       </mat-form-field>
       <div>
-        <button mat-button matStepperNext>Next</button>
+        <button mat-button color="primary" matStepperNext>Next</button>
       </div>
     </form>
   </mat-step>
   <mat-step [stepControl]="secondFormGroup">
     <form [formGroup]="secondFormGroup">
-      <ng-template matStepLabel>Select a Upcoming Event</ng-template>
+      <ng-template matStepLabel>Select an Upcoming Event</ng-template>
 
       <cdk-virtual-scroll-viewport itemSize="10" class="example-viewport">
         <div class="container">
           <div class="example-item">
-            <mat-radio-group class="example-radio-group" name="ss"  formControlName="secondCtrl" [(ngModel)]="FI">
+            <mat-radio-group class="example-radio-group" name="ss" formControlName="secondCtrl" [(ngModel)]="FI">
               <mat-radio-button class="example-radio-button" *ngFor="let match of leagueUpComingEvent; let i = index"
-              [value]="match.id"  (click) = "timeToWait(match.time)">
+                [value]="match.id" (click)="timeToWait(match.time)">
                 <font color=green> {{match.home.name}}</font>
                 <font color=black> - </font>
-                <font color=red>{{match.away.name}}</font> 
+                <font color=red>{{match.away.name}}</font>
                 -
                 {{(unixToDate(match.time).getDate())}}/{{(unixToDate(match.time).getMonth()+1)}}/{{(unixToDate(match.time).getFullYear())}}
-                 {{(unixToDate(match.time).getHours())}}:{{(unixToDate(match.time).getMinutes())}}:{{(unixToDate(match.time).getSeconds())}}
+                {{(unixToDate(match.time).toLocaleTimeString())}}
               </mat-radio-button>
             </mat-radio-group>
           </div>
@@ -39,8 +39,8 @@
       </cdk-virtual-scroll-viewport>
 
       <div>
-        <button mat-button matStepperPrevious>Back</button>
-        <button mat-button matStepperNext>Next</button>
+        <button mat-button color="accent" matStepperPrevious>Back</button>
+        <button mat-button color="primary" matStepperNext>Next</button>
       </div>
     </form>
   </mat-step>
@@ -48,11 +48,12 @@
     <form [formGroup]="threeFormGroup">
       <ng-template matStepLabel>Frecuency Time</ng-template>
       <mat-form-field>
-        <input matInput type="number" formControlName="threeCtrl"  [(ngModel)]="intervalTimefrm"
-        placeholder="Type a time in seconds" required>
+        <input matInput type="number" formControlName="threeCtrl" [(ngModel)]="intervalTimefrm"
+          placeholder="Type a time in seconds" required>
       </mat-form-field>
       <div>
-        <button mat-button matStepperNext>Next</button>
+          <button mat-button color="accent" matStepperPrevious>Back</button>
+        <button mat-button color="primary" matStepperNext>Next</button>
       </div>
     </form>
   </mat-step>
@@ -60,8 +61,9 @@
     <ng-template matStepLabel>Done</ng-template>
     You are now done.
     <div>
-      <button mat-button matStepperPrevious>Back</button>
-      <button mat-button (click)="stepper.reset()">Reset</button>
+      <button mat-button color="accent" matStepperPrevious>Back</button>
+      <button mat-button color="accent" matStepperPrevious (click)="stepper.reset()">Reset</button>
+      <button mat-button color="primary" (click)="startInplayGame()">Start</button>
     </div>
   </mat-step>
 </mat-vertical-stepper>

@@ -116,7 +116,10 @@ export class LeagueComboboxComponent implements OnInit {
   startRequest() {
     if (this.FI != null && this.FI !== 0 && this.intervalTimefrm > 0) {
       this.leagueChoosed = false;
-      this.trackOddsService.hideLeagueComponent.emit(true);
+      setTimeout(() => {
+        this.trackOddsService.hideLeagueComponent.emit(true);
+        console.log(`set timeout de un segundo`);
+      }, 5000);
       this.intervalTimefrm = this.intervalTimefrm * 1000;
       console.log(`FI: ${this.FI}, Interval Time: ${this.intervalTimefrm}`);
       console.log('[takeUntil] ngOnInit');

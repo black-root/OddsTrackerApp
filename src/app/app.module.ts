@@ -22,6 +22,9 @@ import {MatStepperModule} from '@angular/material/stepper';
 import { FormUpcomingEventComponent } from './menu/upcoming-event/form-upcoming-event/form-upcoming-event.component';
 import {MatSelectModule} from '@angular/material/select';
 import { ErrorStateMatcher, ShowOnDirtyErrorStateMatcher } from '@angular/material/core';
+import { TrackOddsService } from './menu/track-odds/track-odds.service';
+import {MatButtonModule} from '@angular/material/button';
+import { PruebaComponent } from './prueba/prueba.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +35,8 @@ import { ErrorStateMatcher, ShowOnDirtyErrorStateMatcher } from '@angular/materi
     LeagueComboboxComponent,
     TableOddsInPlayComponent,
     UpcomingEventComponent,
-    FormUpcomingEventComponent
+    FormUpcomingEventComponent,
+    PruebaComponent
   ],
   imports: [
     BrowserModule,
@@ -46,9 +50,10 @@ import { ErrorStateMatcher, ShowOnDirtyErrorStateMatcher } from '@angular/materi
     MatRadioModule,
     ScrollDispatchModule,
     MatStepperModule,
-    MatSelectModule
+    MatSelectModule,
+    MatButtonModule
   ],
-  providers: [DataService, Subject, ExcelExportService,
+  providers: [DataService, Subject, ExcelExportService, TrackOddsService,
     {provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher}],
   bootstrap: [AppComponent]
 })

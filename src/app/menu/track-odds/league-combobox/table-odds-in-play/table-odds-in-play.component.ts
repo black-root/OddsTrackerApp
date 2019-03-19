@@ -29,27 +29,31 @@ export class TableOddsInPlayComponent implements OnInit, OnDestroy, AfterViewIni
   dtTrigger: Subject<any> = new Subject();
   league: string;
   teams: string;
+  hideLeague: boolean;
 
 
   constructor(private dataService: DataService, private trackOddsService: TrackOddsService, private excelService: ExcelExportService) {
     this.trackOddsService.hideLeagueComponent.subscribe(
-      (flag: any) => {
-        this.parameterRequest = flag;
+      (flag: boolean) => {
+        this.hideLeague = flag;
+        console.log(`hideLeague table ${this.hideLeague}`);
       }
     );
-    this.trackOddsService.inPlayGame.pipe(takeUntil(this.unsubscribe)).subscribe(
-      (inPlayGame: any) => {
-        this.inPlayGameStat = inPlayGame;
-        this.count++;
-        this.rerender();
-        console.log(this.inPlayGameStat);
-      });
+
     this.trackOddsService.nameLeagueSelected.subscribe(
       (headerTable: any) => {
         this.league = headerTable['league'];
         this.teams = headerTable['teams'];
       }
     );
+    this.trackOddsService.inPlayGame.subscribe(
+      (inPlayGame: any) => {
+        this.inPlayGameStat = inPlayGame;
+        this.rerender();
+        this.count++;
+        console.log(this.inPlayGameStat);
+      });
+
   }
 
   ngOnInit() {

@@ -3,6 +3,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DataService } from 'src/app/services/data.service';
 import { UpcomingEvent } from './upcoming-event.model';
 import { OnlyLeagues } from '../../track-odds/league-combobox/inplay-filter.model';
+import { TrackOddsService } from '../../track-odds/track-odds.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { InPlayGame } from '../../track-odds/league-combobox/table-odds-inplay.model';
 
 @Component({
   selector: 'app-form-upcoming-event',
@@ -21,9 +25,21 @@ export class FormUpcomingEventComponent implements OnInit {
   requestNumber: number;
   intervalTimefrm: number;
   waitTime: any;
-  FI: number;
 
-  constructor(private formBuilder: FormBuilder, private dataService: DataService) { }
+  //table
+  FI: number;
+  leagueChoosed: boolean = false;
+  private unsubscribe: Subject<void> = new Subject();
+  private subscription: any;
+  inPlayGameStat: InPlayGame[] = [];
+  count: number = 0;
+  enableTable: boolean;
+
+  constructor(
+    private formBuilder: FormBuilder,
+    private dataService: DataService,
+    private trackOddsService: TrackOddsService) {
+  }
 
   ngOnInit() {
     this.firstFormGroup = this.formBuilder.group({
@@ -111,4 +127,122 @@ export class FormUpcomingEventComponent implements OnInit {
         console.log(this.leagueUpComingEvent);
       });
   }
+
+  startInplayGame() {
+    if (this.FI != null && this.FI !== 0 && this.intervalTimefrm > 0) {
+      this.leagueChoosed = false;
+      this.intervalTimefrm = this.intervalTimefrm * 1000;
+      this.waitTime = this.waitTime * 1000;
+      setTimeout(() => {
+        this.trackOddsService.hideLeagueComponent.emit(true);
+        //console.log(`Set timeout despues de 3 segundos`);
+      },  3000);
+     /*
+      le a;
+      let deployTable = setTimeout(() => {
+        if () {
+          this.trackOddsService.hideLeagueComponent.emit(true);
+        }
+      }, this.waitTime);*/
+
+      // Will resolve after 200ms
+
+      console.log(`FI: ${this.FI}, Interval Time: ${this.intervalTimefrm}`);
+      console.log('[takeUntil] ngOnInit');
+      this.subscription = this.dataService.rqDataTimer(
+        this.FI, this.waitTime, this.intervalTimefrm)
+        .pipe(takeUntil(this.unsubscribe))
+        .subscribe(data => {
+          // TU: any, TT: any, TM: any, TS: any
+          this.trackOddsService.nameLeagueSelected.emit({
+            league: data['results'][0][0]['CT'],
+            teams: data['results'][0][0]['NA']
+          });
+          let local_Time = new Date().toLocaleTimeString('en-GB', { timeZone: 'Europe/London' });
+          this.inPlayGameStat.push({
+            localTime: local_Time,
+            apiTime: this.getTimeInPlay(
+              data['results'][0][0]['TU'],
+              data['results'][0][0]['TT'],
+              data['results'][0][0]['TM'],
+              data['results'][0][0]['TS']),
+            date: this.convertStringToDate(data['results'][0][0]['TU'], 'date'),
+            score: data['results'][0][0]['SS'],
+            team1WO_Odds: this.stringToDecimal(data['results'][0][37]['OD']),
+            tie_Odds: this.stringToDecimal(data['results'][0][38]['OD']),
+            team2WO_Odds: this.stringToDecimal(data['results'][0][39]['OD'])
+          });
+          this.trackOddsService.inPlayGame.emit(this.inPlayGameStat);
+          console.log(this.inPlayGameStat);
+          if (this.count === 1) {
+            this.trackOddsService.hideLeagueComponent.emit(true);
+          }
+          this.count++;
+          if (this.count >= 60) {// a los 10 segundos se detiene
+            this.stopSubscribe();
+            this.count = 0;
+            // se envia el array al servcio
+          }
+        }, (error) => console.error(error));
+      //return this.subscription;
+    }
+  }
+  hideComponent() {
+
+  }
+
+
+  getTimeInPlay(TU: any, TT: any, TM: any, TS: any) {
+    let apiTime = this.convertStringToDate(TU, 'time'); // bet365
+    let horaEngland = new Date();
+    let hora1 = horaEngland.toLocaleTimeString('en-GB', { timeZone: 'Europe/London' }).split(":");
+    let hora2 = apiTime.split(":");
+    let t1 = new Date();
+    let t2 = new Date();
+    let time = 0;
+
+    t1.setHours(Number(hora1[0]), Number(hora1[1]), Number(hora1[2]));
+    t2.setHours(Number(hora2[0]), Number(hora2[1]), Number(hora2[2]));
+
+    //Aquí hago la resta
+    t1.setHours(t1.getHours() - t2.getHours(), t1.getMinutes() - t2.getMinutes(), t1.getSeconds() - t2.getSeconds());
+    let segundos = t1.getHours() * 60 * 60 + t1.getMinutes() * 60 + t1.getSeconds();
+    console.log(`TT es: ${TT}, TM: ${TM}, TS: ${TS}, segundos: ${segundos}`);
+    if (TT === `1`) {
+      time = segundos + (Number(TM) * 60) + Number(TS);
+      console.log(`seconds ${time}`);
+    } else {
+      time = Number(TM) * 60 + Number(TS);
+      console.log(`seconds ${time}`);
+    }
+  }
+  convertStringToDate(dateTime: string, dt: string): any {
+    let m: any = dateTime.match(/(\d\d\d\d)(\d\d)(\d\d)(\d\d)(\d\d)(\d\d)/);
+    let result = new Date(m[1], m[2] - 1, m[3], m[4], m[5], m[6]);
+
+    if (dt === 'date') {
+      console.log(result.toLocaleDateString());
+      return result.toLocaleDateString();
+    } else if (dt === 'time') {
+      console.log(result.toLocaleTimeString('en-US', { hour12: false }));
+      return result.toLocaleTimeString();
+    } else {
+      return null;
+    }
+  }
+
+  stringToDecimal(cadena: any): number {
+    cadena = cadena.split("/");
+    let result = 1 + cadena[0] / cadena[1];
+    let result2: any = result.toFixed(2);
+    return result2;
+  }
+
+  private stopSubscribe() {
+    this.unsubscribe.next();
+    this.unsubscribe.complete();
+    this.subscription.unsubscribe();
+    console.log('[takeUntil] complete');
+  }
+
 }

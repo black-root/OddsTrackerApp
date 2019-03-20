@@ -24,4 +24,5 @@ export class LeagueSelected {
     id: number;
     home: string;
     away: string;
+    ss: string;
 }

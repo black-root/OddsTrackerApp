@@ -1,67 +1,82 @@
-<form class="border border-light p-5" (ngSubmit)="f.form.valid && startRequest()" #f="ngForm">
-  <p class="h4 mb-4 text-center"><strong>Track Odds's Configuration</strong> </p>
-  <p class="h4 mb-3 text-center">Matches in live</p>
-  <div class="form-row">
-    <div class="form-group col-md-4">
-      <div class="form-group">
-        <label for="sportFormSelectControl" class="col-sm-4 col-form-label">Sport</label>
-        <div class="col-sm-12">
-          <select class="form-control" id="sportFormSelectControl" required>
-            <option>SOCCER</option>
-          </select>
-        </div>
-      </div>
-    </div>
-    <div class="form-group col-md-8">
-      <label for="leagueFormControlSelect1" class="col-sm-8 col-form-label">League</label>
-      <div class="col-sm-12">
-        <select class="form-control" id="leagueFormControlSelect1" required (click)="getMatchesInplay()">
-          <option>SELECT A LEAGUE</option>
-          <option *ngFor="let league of onlyLeagues" (click)="getHomeAndAway(league.id)">
+<p class="h4 mb-4 text-center"><strong>Track Odds's Configuration</strong> </p>
+<p class="h4 mb-3 text-center">In-PlayEvent</p>
+<mat-vertical-stepper [linear]="isLinear" #stepper>
+  <mat-step [stepControl]="firstFormGroup">
+    <form [formGroup]="firstFormGroup">
+      <ng-template matStepLabel>Select a League</ng-template>
+      <mat-form-field id="selectLeague">
+        <mat-select placeholder="League" formControlName="firstCtrl">
+          <mat-option *ngFor="let league of onlyLeagues" (click)="getHomeAndAway(league.id)" value="valid">
             {{league.name}}
-          </option>
-        </select>
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <div>
+        <button mat-button color="primary" matStepperNext>Next</button>
       </div>
-    </div>
-  </div>
-  <div class="form-row">
-    <div class="form-group col-md-12">
-      <label for="matchesInLiveFormControlSelect" class="col-sm-10 col-form-label">Matches In-play</label>
+    </form>
+  </mat-step>
+  <mat-step [stepControl]="secondFormGroup">
+    <form [formGroup]="secondFormGroup">
+      <ng-template matStepLabel>Select an In-PlayMatch</ng-template>
+
       <cdk-virtual-scroll-viewport itemSize="10" class="example-viewport">
         <div class="container">
           <div class="example-item">
-            <mat-radio-group class="example-radio-group" name="s" [(ngModel)]="FI" *ngIf=leagueChoosed>
+            <mat-radio-group class="example-radio-group" name="ss" formControlName="secondCtrl" [(ngModel)]="FI">
               <mat-radio-button class="example-radio-button" *ngFor="let match of leagueSelected; let i = index"
                 [value]="match.id">
                 <font color=green> {{match.home}}</font>
                 <font color=black> - </font>
                 <font color=red>{{match.away}}</font>
+                Score <strong>{{match.ss}}</strong>
               </mat-radio-button>
             </mat-radio-group>
           </div>
         </div>
       </cdk-virtual-scroll-viewport>
-    </div>
-  </div>
-  <div class="form-row">
-    <div class="form-group col-md-6">
-      <label for="inputIntervalTimeID" class="col-sm-12 col-form-label">Frecuency (t)</label>
-      <div class="col-sm-12">
-        <input type="number" class="form-control" id="inputIntervalTimeID" placeholder="Time in seconds"
-          [(ngModel)]="intervalTimefrm" name="inputIntervalTimeName" required>
+      <div>
+        <button mat-button color="accent" matStepperPrevious>Back</button>
+        <button mat-button color="primary" matStepperNext>Next</button>
       </div>
-    </div>
-    <div class="form-group col-md-6">
-      <label for="inputIntervalRequestNumberID" class="col-sm-12 col-form-label">Request Number</label>
-      <div class="col-sm-12">
-        <input type="number" class="form-control" id="inputIntervalRequestNumberID" placeholder="Request Number"
-          [(ngModel)]="requestNumber" name="inputIntervalRequestNumber" required>
+    </form>
+  </mat-step>
+
+  <mat-step [stepControl]="threeFormGroup">
+    <form [formGroup]="threeFormGroup">
+      <ng-template matStepLabel>Frecuency Time</ng-template>
+      <mat-form-field>
+        <input matInput type="number" formControlName="threeCtrl" [(ngModel)]="intervalTimefrm"
+          placeholder="Type a time in seconds" required>
+      </mat-form-field>
+      <div>
+        <button mat-button color="accent" matStepperPrevious>Back</button>
+        <button mat-button color="primary" matStepperNext>Next</button>
       </div>
-    </div>
-  </div>
-  <div class="form-group text-center">
-    <div class="col-sm-12">
-      <button type="submit" class="btn btn-primary btn-lg btn-block">Start</button>
-    </div>
-  </div>
-</form>
+    </form>
+  </mat-step>
+
+  <mat-step [stepControl]="fourFormGroup">
+    <form [formGroup]="fourFormGroup">
+      <ng-template matStepLabel>Max Request</ng-template>
+      <mat-form-field>
+        <input matInput type="number" formControlName="fourCtrl" [(ngModel)]="maxRequest"
+          placeholder="Type an max Request number" required>
+      </mat-form-field>
+      <div>
+        <button mat-button color="accent" matStepperPrevious>Back</button>
+        <button mat-button color="primary" matStepperNext>Next</button>
+      </div>
+    </form>
+  </mat-step>
+
+  <mat-step>
+      <ng-template matStepLabel>Done</ng-template>
+      You are now done.
+      <div>
+        <button mat-button color="accent" matStepperPrevious>Back</button>
+        <button mat-button color="accent" matStepperPrevious (click)="stepper.reset()">Reset</button>
+        <button mat-button color="primary" (click)="startRequest()" >Start</button>
+      </div>
+    </mat-step>
+</mat-vertical-stepper>

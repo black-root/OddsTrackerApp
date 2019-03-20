@@ -5,7 +5,7 @@ import { TrackOddsService } from '../track-odds.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { InPlayGame } from './table-odds-inplay.model';
-import { FormControl, Validators } from '@angular/forms';
+import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'app-league-combobox',
@@ -13,6 +13,13 @@ import { FormControl, Validators } from '@angular/forms';
   styleUrls: ['./league-combobox.component.css']
 })
 export class LeagueComboboxComponent implements OnInit {
+
+  isLinear = true;
+  firstFormGroup: FormGroup;
+  secondFormGroup: FormGroup;
+  threeFormGroup: FormGroup;
+  fourFormGroup: FormGroup;
+
   leagueChoosed: boolean = false;
   private idLeagueLocal: number;
   inplayFilter: InplayFilter[];
@@ -21,7 +28,10 @@ export class LeagueComboboxComponent implements OnInit {
   flagCall: number = 0; // variable que sirve para que no se haga doble request al clickear el select
   FI: number;
   intervalTimefrm: number;
-  requestNumber: number;
+  maxRequest: number;
+  positionTie: number;
+  positionWin1: number;
+  positionWin2: number;
 
   //table
   // variable is necesary to stop the suscription
@@ -30,7 +40,7 @@ export class LeagueComboboxComponent implements OnInit {
   count: number = 0;
   inPlayGameStat: InPlayGame[] = [];
 
-  constructor(private dataService: DataService, private trackOddsService: TrackOddsService) {
+  constructor(private formBuilder: FormBuilder, private dataService: DataService, private trackOddsService: TrackOddsService) {
   }
 
   hideComponent() {
@@ -38,6 +48,19 @@ export class LeagueComboboxComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.firstFormGroup = this.formBuilder.group({
+      firstCtrl: ['', Validators.required]
+    });
+    this.secondFormGroup = this.formBuilder.group({
+      secondCtrl: ['', Validators.required]
+    });
+    this.threeFormGroup = this.formBuilder.group({
+      threeCtrl: ['', Validators.required]
+    });
+    this.fourFormGroup = this.formBuilder.group({
+      fourCtrl: ['', Validators.required]
+    });
+    this.getMatchesInplay();
   }
 
   getMatchesInplay() {
@@ -87,15 +110,15 @@ export class LeagueComboboxComponent implements OnInit {
   getHomeAndAway(idLeagueLocal: number) {
     this.leagueChoosed = true;
     this.cleanLeagueSelected();
-    let index;
+    console.log(`Selecected league ID: ${idLeagueLocal}`);
     for (let i = 0; this.inplayFilter.length > i; i++) {
       if (this.inplayFilter[i].league.id === idLeagueLocal) {
         this.leagueSelected.push({
           id: this.inplayFilter[i].id,
           home: this.inplayFilter[i].home.name,
-          away: this.inplayFilter[i].away.name
+          away: this.inplayFilter[i].away.name,
+          ss: this.inplayFilter[i].ss
         });
-        index = i;
       }
     }
   }
@@ -112,14 +135,30 @@ export class LeagueComboboxComponent implements OnInit {
         { FI: this.FI, startTime: 0, intervalTime: this.intervalTimefrm });
     }
   }
-
+  searchOdds(data: any) {
+    let paFlagCount = 0;
+    let treeTimesFlag: boolean = false;
+    for (let i = 0; data.length > i; i++) {
+      if (treeTimesFlag === false) {
+        if (data[i]['type'] === "PA") {
+          paFlagCount++;
+          if (paFlagCount === 3) {
+            console.log("Se encontro los odds");
+            treeTimesFlag = true;
+            this.positionWin1 = i - 2;
+            this.positionTie = i - 1;
+            this.positionWin2 = i;
+          }
+        } else {
+          paFlagCount = 0;
+        }
+      }
+    }
+    treeTimesFlag = false;
+  }
   startRequest() {
     if (this.FI != null && this.FI !== 0 && this.intervalTimefrm > 0) {
       this.leagueChoosed = false;
-      setTimeout(() => {
-        this.trackOddsService.hideLeagueComponent.emit(true);
-        console.log(`set timeout de un segundo`);
-      }, 5000);
       this.intervalTimefrm = this.intervalTimefrm * 1000;
       console.log(`FI: ${this.FI}, Interval Time: ${this.intervalTimefrm}`);
       console.log('[takeUntil] ngOnInit');
@@ -127,6 +166,12 @@ export class LeagueComboboxComponent implements OnInit {
         this.FI, 0, this.intervalTimefrm)
         .pipe(takeUntil(this.unsubscribe))
         .subscribe(data => {
+
+          if (this.count === 1) {
+            this.trackOddsService.hideLeagueComponent.emit(true);
+          } else if (this.count === 0) {
+            this.searchOdds(data['results'][0]);
+          }
           // TU: any, TT: any, TM: any, TS: any
           console.log(data['results']);
           this.trackOddsService.nameLeagueSelected.emit({
@@ -143,15 +188,16 @@ export class LeagueComboboxComponent implements OnInit {
               data['results'][0][0]['TS']),
             date: this.convertStringToDate(data['results'][0][0]['TU'], 'date'),
             score: data['results'][0][0]['SS'],
-            team1WO_Odds: this.stringToDecimal(data['results'][0][44]['OD']),
-            tie_Odds: this.stringToDecimal(data['results'][0][45]['OD']),
-            team2WO_Odds: this.stringToDecimal(data['results'][0][46]['OD'])
+            team1WO_Odds: this.stringToDecimal(data['results'][0][this.positionWin1]['OD']),
+            tie_Odds: this.stringToDecimal(data['results'][0][this.positionTie]['OD']),
+            team2WO_Odds: this.stringToDecimal(data['results'][0][this.positionWin2]['OD'])
           });
           this.trackOddsService.inPlayGame.emit(this.inPlayGameStat);
           console.log(this.inPlayGameStat);
+
           this.count++;
           // this.storeArray[this.count] = data;
-          if (this.count >= this.requestNumber) {// a los 10 segundos se detiene
+          if (this.count >= this.maxRequest) {// a los 10 segundos se detiene
             this.stopSubscribe();
             this.count = 0;
             // se envia el array al servcio
@@ -226,5 +272,6 @@ export class LeagueComboboxComponent implements OnInit {
     console.log(`El tiempo de Bet365 es ${minutes}:${t3.getSeconds()} `);
     return `${minutes}:${t3.getSeconds()}`;
   }
+
 }
 

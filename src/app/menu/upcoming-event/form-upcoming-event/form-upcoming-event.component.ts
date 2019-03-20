@@ -133,10 +133,6 @@ export class FormUpcomingEventComponent implements OnInit {
       this.leagueChoosed = false;
       this.intervalTimefrm = this.intervalTimefrm * 1000;
       this.waitTime = this.waitTime * 1000;
-      setTimeout(() => {
-        this.trackOddsService.hideLeagueComponent.emit(true);
-        //console.log(`Set timeout despues de 3 segundos`);
-      },  3000);
      /*
       le a;
       let deployTable = setTimeout(() => {

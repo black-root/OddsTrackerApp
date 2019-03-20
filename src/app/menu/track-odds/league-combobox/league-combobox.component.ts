@@ -128,6 +128,7 @@ export class LeagueComboboxComponent implements OnInit {
         .pipe(takeUntil(this.unsubscribe))
         .subscribe(data => {
           // TU: any, TT: any, TM: any, TS: any
+          console.log(data['results']);
           this.trackOddsService.nameLeagueSelected.emit({
             league: data['results'][0][0]['CT'],
             teams: data['results'][0][0]['NA']
@@ -142,9 +143,9 @@ export class LeagueComboboxComponent implements OnInit {
               data['results'][0][0]['TS']),
             date: this.convertStringToDate(data['results'][0][0]['TU'], 'date'),
             score: data['results'][0][0]['SS'],
-            team1WO_Odds: this.stringToDecimal(data['results'][0][37]['OD']),
-            tie_Odds: this.stringToDecimal(data['results'][0][38]['OD']),
-            team2WO_Odds: this.stringToDecimal(data['results'][0][39]['OD'])
+            team1WO_Odds: this.stringToDecimal(data['results'][0][44]['OD']),
+            tie_Odds: this.stringToDecimal(data['results'][0][45]['OD']),
+            team2WO_Odds: this.stringToDecimal(data['results'][0][46]['OD'])
           });
           this.trackOddsService.inPlayGame.emit(this.inPlayGameStat);
           console.log(this.inPlayGameStat);

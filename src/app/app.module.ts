@@ -25,6 +25,7 @@ import { ErrorStateMatcher, ShowOnDirtyErrorStateMatcher } from '@angular/materi
 import { TrackOddsService } from './menu/track-odds/track-odds.service';
 import {MatButtonModule} from '@angular/material/button';
 import { PruebaComponent } from './prueba/prueba.component';
+import {MatTabsModule} from '@angular/material/tabs';
 
 @NgModule({
   declarations: [
@@ -51,7 +52,8 @@ import { PruebaComponent } from './prueba/prueba.component';
     ScrollDispatchModule,
     MatStepperModule,
     MatSelectModule,
-    MatButtonModule
+    MatButtonModule,
+    MatTabsModule
   ],
   providers: [DataService, Subject, ExcelExportService, TrackOddsService,
     {provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher}],

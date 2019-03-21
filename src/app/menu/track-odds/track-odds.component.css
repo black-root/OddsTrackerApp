@@ -1,22 +1,61 @@
+.menu {
+  height: 70px;
+  /*IMPORTANTE*/
+  justify-content: center;
+  align-items: center;
+}
+
 .father {
-    height: 750px;
-    /*IMPORTANTE*/
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+  height: 40px;
+  /*IMPORTANTE*/
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.border1 {
+  border: solid .5em;
+  padding: .5em;
+   
+  /* non-essential, just to prettify the thing */
+  margin:  auto;
+  width: 80%; height: 590px;
+  text-align: center;
+  display: block
+}
+.border2{
+  background: white;
+  text-align: left;
+  background: whitesmoke;
+}
+
+.soon1 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.soon2 {
+  width: 700px;
+}
+
+.father3 {
+  height: 900px;
   
-  .soon {
-    width: 700px;
-  }
-  .father3 {
-    height: 900px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    
-  }
-  .soon3 {
-    width: 1000px;
-  }
-  
+  justify-content: center;
+  align-items: center;
+}
+
+.soon3 {
+  width: 1000px;
+}
+.fatherForm {
+  height: 100%;
+  /*IMPORTANTE*/
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.soonForm {
+  width: 80%;
+}

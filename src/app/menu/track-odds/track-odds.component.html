@@ -1,8 +1,22 @@
-<app-menu></app-menu>
-
-<div class="father" [hidden]="hideLeagueComponent">
-  <div class="shadow p-3 mb-5 bg-white rounded soon">
-    <app-league-combobox></app-league-combobox>
+<div class="menu">
+  <app-menu></app-menu>
+</div>
+<div class="father">
+  <p class="h5 mb-3 text-center">In-PlayEvent</p>
+</div>
+<div class="border1">
+  <div class="border2">
+    <mat-tab-group>
+      <mat-tab label="Configuration">
+        <div class="soon1">
+          <div class="soon2">
+            <app-league-combobox></app-league-combobox>
+          </div>
+        </div>
+      </mat-tab>
+      <mat-tab label="Progress">Content2 </mat-tab>
+      <mat-tab label="Watch Table"> Content 3 </mat-tab>
+    </mat-tab-group>
   </div>
 </div>
 <div class="father3" *ngIf="hideLeagueComponent">

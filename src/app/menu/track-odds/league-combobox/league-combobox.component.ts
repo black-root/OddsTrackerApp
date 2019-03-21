@@ -224,7 +224,7 @@ export class LeagueComboboxComponent implements OnInit {
       return result.toLocaleDateString();
     } else if (dt === 'time') {
       console.log(result.toLocaleTimeString('en-US', { hour12: false }));
-      return result.toLocaleTimeString();
+      return result.toLocaleTimeString('en-GB', { hour12: false });
     } else {
       return null;
     }

@@ -32,6 +32,8 @@ export class LeagueComboboxComponent implements OnInit {
   positionTie: number;
   positionWin1: number;
   positionWin2: number;
+  tabGroupFlag: boolean = true;
+  stopTrackingFlag: boolean;
 
   //table
   // variable is necesary to stop the suscription
@@ -41,6 +43,18 @@ export class LeagueComboboxComponent implements OnInit {
   inPlayGameStat: InPlayGame[] = [];
 
   constructor(private formBuilder: FormBuilder, private dataService: DataService, private trackOddsService: TrackOddsService) {
+    this.trackOddsService.tabGroup.subscribe(
+      (tabGroupFlag: boolean) => {
+        // this.count = count;
+        this.tabGroupFlag = tabGroupFlag;
+      }
+    );
+    this.trackOddsService.stopTrackingFlag.subscribe(
+      (stopTrackingFlag: boolean) => {
+        // this.count = count;
+        this.stopTrackingFlag = stopTrackingFlag;
+      }
+    );
   }
 
   hideComponent() {
@@ -158,12 +172,13 @@ export class LeagueComboboxComponent implements OnInit {
   }
   startRequest() {
     if (this.FI != null && this.FI !== 0 && this.intervalTimefrm > 0) {
+      this.tabGroupFlag = false;
       this.leagueChoosed = false;
-      this.intervalTimefrm = this.intervalTimefrm * 1000;
+      let intervalTimeMiliSeconds = this.intervalTimefrm * 1000;
       console.log(`FI: ${this.FI}, Interval Time: ${this.intervalTimefrm}`);
       console.log('[takeUntil] ngOnInit');
       this.subscription = this.dataService.rqDataTimer(
-        this.FI, 0, this.intervalTimefrm)
+        this.FI, 0, intervalTimeMiliSeconds)
         .pipe(takeUntil(this.unsubscribe))
         .subscribe(data => {
 
@@ -171,9 +186,9 @@ export class LeagueComboboxComponent implements OnInit {
             this.trackOddsService.hideLeagueComponent.emit(true);
           } else if (this.count === 0) {
             this.searchOdds(data['results'][0]);
+            console.log(data['results']);
           }
           // TU: any, TT: any, TM: any, TS: any
-          console.log(data['results']);
           this.trackOddsService.nameLeagueSelected.emit({
             league: data['results'][0][0]['CT'],
             teams: data['results'][0][0]['NA']
@@ -192,19 +207,37 @@ export class LeagueComboboxComponent implements OnInit {
             tie_Odds: this.stringToDecimal(data['results'][0][this.positionTie]['OD']),
             team2WO_Odds: this.stringToDecimal(data['results'][0][this.positionWin2]['OD'])
           });
+          this.trackOddsService.inPlayingTime.emit(this.getTimeInPlay(
+            data['results'][0][0]['TU'],
+            data['results'][0][0]['TT'],
+            data['results'][0][0]['TM'],
+            data['results'][0][0]['TS']));
+          this.trackOddsService.score.emit(data['results'][0][0]['SS']);
           this.trackOddsService.inPlayGame.emit(this.inPlayGameStat);
+          this.tabGroupFlag = false;
+          this.trackOddsService.tabGroup.emit(this.tabGroupFlag);
           console.log(this.inPlayGameStat);
 
+          this.trackOddsService.progressInplay.emit(this.progressBarPercent(this.count, this.maxRequest));
           this.count++;
           // this.storeArray[this.count] = data;
-          if (this.count >= this.maxRequest) {// a los 10 segundos se detiene
+          if (this.count >= this.maxRequest || this.stopTrackingFlag === true) {// a los 10 segundos se detiene
+            this.trackOddsService.progressInplay.emit(this.progressBarPercent(this.count, this.maxRequest));
             this.stopSubscribe();
             this.count = 0;
             // se envia el array al servcio
           }
-        }, (error) => console.error(error));
+        }, (error) => {
+          console.error(error);
+          this.tabGroupFlag = true;
+        });
       return this.subscription;
     }
+  }
+  private progressBarPercent(count: number, maxRequest: number): number {
+    let result: number = 0;
+    result = (count / maxRequest) * 100;
+    return Number(result.toFixed(2));
   }
 
   private stopSubscribe() {

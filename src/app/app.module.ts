@@ -26,6 +26,9 @@ import { TrackOddsService } from './menu/track-odds/track-odds.service';
 import {MatButtonModule} from '@angular/material/button';
 import { PruebaComponent } from './prueba/prueba.component';
 import {MatTabsModule} from '@angular/material/tabs';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
 
 @NgModule({
   declarations: [
@@ -53,7 +56,11 @@ import {MatTabsModule} from '@angular/material/tabs';
     MatStepperModule,
     MatSelectModule,
     MatButtonModule,
-    MatTabsModule
+    MatTabsModule,
+    MatProgressBarModule,
+    NgbModule,
+    MatButtonToggleModule
+
   ],
   providers: [DataService, Subject, ExcelExportService, TrackOddsService,
     {provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher}],

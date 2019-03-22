@@ -53,7 +53,6 @@ export class TableOddsInPlayComponent implements OnInit, OnDestroy, AfterViewIni
         this.count++;
         console.log(this.inPlayGameStat);
       });
-
   }
 
   ngOnInit() {

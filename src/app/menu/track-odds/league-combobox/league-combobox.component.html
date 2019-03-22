@@ -1,10 +1,11 @@
+<p class="h4 mb-3 text-center">Live Matches</p>
 <mat-vertical-stepper [linear]="isLinear" #stepper>
   <mat-step [stepControl]="firstFormGroup">
     <form [formGroup]="firstFormGroup">
       <ng-template matStepLabel>Select a League</ng-template>
       <mat-form-field id="selectLeague">
         <mat-select placeholder="League" formControlName="firstCtrl">
-          <mat-option *ngFor="let league of onlyLeagues" (click)="getHomeAndAway(league.id)" value="valid">
+          <mat-option *ngFor="let league of onlyLeagues" (click)="getHomeAndAway(league.id)" value="valid"  [disabled]="!tabGroupFlag"> 
             {{league.name}}
           </mat-option>
         </mat-select>
@@ -21,9 +22,9 @@
       <cdk-virtual-scroll-viewport itemSize="10" class="example-viewport">
         <div class="container">
           <div class="example-item">
-            <mat-radio-group class="example-radio-group" name="ss" formControlName="secondCtrl" [(ngModel)]="FI">
+            <mat-radio-group class="example-radio-group" name="ss" formControlName="secondCtrl" [(ngModel)]="FI"  [disabled]="!tabGroupFlag">
               <mat-radio-button class="example-radio-button" *ngFor="let match of leagueSelected; let i = index"
-                [value]="match.id">
+                [value]="match.id" >
                 <font color=green> {{match.home}}</font>
                 <font color=black> - </font>
                 <font color=red>{{match.away}}</font>
@@ -42,10 +43,10 @@
 
   <mat-step [stepControl]="threeFormGroup">
     <form [formGroup]="threeFormGroup">
-      <ng-template matStepLabel>Frecuency Time</ng-template>
+      <ng-template matStepLabel>Tracking Interval</ng-template>
       <mat-form-field>
         <input matInput type="number" formControlName="threeCtrl" [(ngModel)]="intervalTimefrm"
-          placeholder="Type a time in seconds" required>
+          placeholder="Type a time in seconds" required  [disabled]="!tabGroupFlag">
       </mat-form-field>
       <div>
         <button mat-button color="accent" matStepperPrevious>Back</button>
@@ -56,10 +57,10 @@
 
   <mat-step [stepControl]="fourFormGroup">
     <form [formGroup]="fourFormGroup">
-      <ng-template matStepLabel>Max Request</ng-template>
+      <ng-template matStepLabel>Request Limit</ng-template>
       <mat-form-field>
         <input matInput type="number" formControlName="fourCtrl" [(ngModel)]="maxRequest"
-          placeholder="Type an max Request number" required>
+          placeholder="Type an max Request number" required  [disabled]="!tabGroupFlag">
       </mat-form-field>
       <div>
         <button mat-button color="accent" matStepperPrevious>Back</button>
@@ -73,8 +74,8 @@
       You are now done.
       <div>
         <button mat-button color="accent" matStepperPrevious>Back</button>
-        <button mat-button color="accent" matStepperPrevious (click)="stepper.reset()">Reset</button>
-        <button mat-button color="primary" (click)="startRequest()" >Start</button>
+        <button mat-button color="accent" matStepperPrevious (click)="stepper.reset()"  [disabled]="!tabGroupFlag">Reset</button>
+        <button mat-button color="primary" (click)="startRequest()" [disabled]="!tabGroupFlag">Start</button>
       </div>
     </mat-step>
 </mat-vertical-stepper>

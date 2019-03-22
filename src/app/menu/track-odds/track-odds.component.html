@@ -1,9 +1,6 @@
 <div class="menu">
   <app-menu></app-menu>
 </div>
-<div class="father">
-  <p class="h5 mb-3 text-center">In-PlayEvent</p>
-</div>
 <div class="border1">
   <div class="border2">
     <mat-tab-group>
@@ -14,13 +11,33 @@
           </div>
         </div>
       </mat-tab>
-      <mat-tab label="Progress">Content2 </mat-tab>
-      <mat-tab label="Watch Table"> Content 3 </mat-tab>
+      <mat-tab label="Match Progress" [disabled] = "tabGroupFlag">
+        <blockquote class="blockquote text-center">
+          <p class="mb-0">Deutsche Sporthochschule Koln</p>
+          <footer class="blockquote-footer">Live Match <br><strong>League:</strong> {{league}} <br><cite title="Source Title">
+              <strong>Teams:</strong> {{teams}} <br>
+            </cite></footer>{{score}}
+            <br><strong>{{inPlayTime}}</strong> 
+        </blockquote>
+        <p>Progress time to stop tracking this match.</p>
+        <p>
+          <ngb-progressbar [value]="count" type="info"> {{count}}%</ngb-progressbar>
+        </p>
+        <div class="example-button-row">
+            <button type="button" class="btn btn-danger" (click) = "stopTrackingEvent()" [disabled] = "onlyButonStopFlag">Stop</button>
+            <button type="button" class="btn btn-primary" (click) = "allClear()" [disabled] = "clearFlag">Clear</button>  
+            <button type="button" class="btn btn-dark" (click)="exportAsXLSX()" [disabled] = "tabGroupFlag" >Export Excel</button>          
+        </div>
+      </mat-tab>
+      <mat-tab label="Watch Table"  [disabled] = "tabGroupFlag">
+        <cdk-virtual-scroll-viewport itemSize="10" class="example-viewport">
+          <div class="father3" *ngIf="hideLeagueComponent">
+            <div class="shadow p-3 mb-5 bg-white rounded soon3">
+              <app-table-odds-in-play></app-table-odds-in-play>
+            </div>
+          </div>
+        </cdk-virtual-scroll-viewport>
+      </mat-tab>
     </mat-tab-group>
-  </div>
-</div>
-<div class="father3" *ngIf="hideLeagueComponent">
-  <div class="shadow p-3 mb-5 bg-white rounded soon3">
-    <app-table-odds-in-play></app-table-odds-in-play>
   </div>
 </div>

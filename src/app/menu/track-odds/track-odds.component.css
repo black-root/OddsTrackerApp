@@ -19,7 +19,7 @@
    
   /* non-essential, just to prettify the thing */
   margin:  auto;
-  width: 80%; height: 590px;
+  width: 80%; height: 610px;
   text-align: center;
   display: block
 }
@@ -39,14 +39,15 @@
 }
 
 .father3 {
-  height: 900px;
-  
+  height: 100%;
+  width: 100%;
   justify-content: center;
   align-items: center;
 }
 
 .soon3 {
-  width: 1000px;
+  width: 1028px;
+  padding: 2rem;
 }
 .fatherForm {
   height: 100%;
@@ -58,4 +59,12 @@
 
 .soonForm {
   width: 80%;
+}
+
+.example-viewport {
+  height: 510px;
+  padding: 2em;
+  border: 1px solid black;
+  justify-content: center;
+  align-items: center;
 }

@@ -67,9 +67,9 @@ export class TrackOddsComponent implements OnInit {
       }
     );
     this.trackOddsService.inPlayGame.subscribe(
-      (apiTime: any) => {
+      (data: any) => {
         // this.count = count;
-        this.inPlayGameStat = apiTime;
+        this.inPlayGameStat = data;
       }
     );
 

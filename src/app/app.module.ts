@@ -22,13 +22,18 @@ import {MatStepperModule} from '@angular/material/stepper';
 import { FormUpcomingEventComponent } from './menu/upcoming-event/form-upcoming-event/form-upcoming-event.component';
 import {MatSelectModule} from '@angular/material/select';
 import { ErrorStateMatcher, ShowOnDirtyErrorStateMatcher } from '@angular/material/core';
+
 import { TrackOddsService } from './menu/track-odds/track-odds.service';
+import { UpcomingEventService } from './menu/upcoming-event/upcoming-event.service';
+
 import {MatButtonModule} from '@angular/material/button';
 import { PruebaComponent } from './prueba/prueba.component';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import { CountdownService } from './services/countdown.service';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
@@ -59,10 +64,11 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
     MatTabsModule,
     MatProgressBarModule,
     NgbModule,
-    MatButtonToggleModule
+    MatButtonToggleModule,
+    MatProgressSpinnerModule
 
   ],
-  providers: [DataService, Subject, ExcelExportService, TrackOddsService,
+  providers: [CountdownService, DataService, UpcomingEventService, Subject, ExcelExportService, TrackOddsService,
     {provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher}],
   bootstrap: [AppComponent]
 })

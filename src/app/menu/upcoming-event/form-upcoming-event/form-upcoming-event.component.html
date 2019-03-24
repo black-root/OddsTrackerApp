@@ -1,5 +1,4 @@
-<p class="h4 mb-4 text-center"><strong>Track Odds's Configuration</strong> </p>
-<p class="h4 mb-3 text-center">Upcoming Event</p>
+<p class="h4 mb-3 text-center">Upcoming Matches</p>
 <mat-vertical-stepper [linear]="isLinear" #stepper>
   <mat-step [stepControl]="firstFormGroup">
     <form [formGroup]="firstFormGroup">
@@ -25,12 +24,13 @@
           <div class="example-item">
             <mat-radio-group class="example-radio-group" name="ss" formControlName="secondCtrl" [(ngModel)]="FI">
               <mat-radio-button class="example-radio-button" *ngFor="let match of leagueUpComingEvent; let i = index"
-                [value]="match.id" (click)="timeToWait(match.time)">
+                [value]="match.id"
+                (click)="timeToWait(match.time, match.league.id, match.league.name, match.home.name, match.away.name)">
                 <font color=green> {{match.home.name}}</font>
                 <font color=black> - </font>
                 <font color=red>{{match.away.name}}</font>
                 -
-                {{(unixToDate(match.time).getDate())}}/{{(unixToDate(match.time).getMonth()+1)}}/{{(unixToDate(match.time).getFullYear())}}
+                {{unixToDate(match.time).toLocaleDateString()}}
                 {{(unixToDate(match.time).toLocaleTimeString())}}
               </mat-radio-button>
             </mat-radio-group>
@@ -52,11 +52,26 @@
           placeholder="Type a time in seconds" required>
       </mat-form-field>
       <div>
-          <button mat-button color="accent" matStepperPrevious>Back</button>
+        <button mat-button color="accent" matStepperPrevious>Back</button>
         <button mat-button color="primary" matStepperNext>Next</button>
       </div>
     </form>
   </mat-step>
+
+  <mat-step [stepControl]="fourFormGroup">
+    <form [formGroup]="fourFormGroup">
+      <ng-template matStepLabel>Request Limit</ng-template>
+      <mat-form-field>
+        <input matInput type="number" formControlName="fourCtrl" [(ngModel)]="maxRequest"
+          placeholder="Type an max Request number" required [disabled]="!tabGroupFlag">
+      </mat-form-field>
+      <div>
+        <button mat-button color="accent" matStepperPrevious>Back</button>
+        <button mat-button color="primary" matStepperNext>Next</button>
+      </div>
+    </form>
+  </mat-step>
+
   <mat-step>
     <ng-template matStepLabel>Done</ng-template>
     You are now done.

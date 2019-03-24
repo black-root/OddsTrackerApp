@@ -38,12 +38,7 @@
   width: 700px;
 }
 
-.father3 {
-  height: 100%;
-  width: 100%;
-  justify-content: center;
-  align-items: center;
-}
+
 
 .soon3 {
   width: 1028px;
@@ -65,6 +60,12 @@
   height: 510px;
   padding: 2em;
   border: 1px solid black;
+  justify-content: center;
+  align-items: center;
+}
+.father3 {
+  height: 100%;
+  width: 100%;
   justify-content: center;
   align-items: center;
 }

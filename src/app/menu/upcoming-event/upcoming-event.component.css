@@ -1,22 +1,63 @@
+.soon {
+  width: 700px;
+}
+
+.soon3 {
+  width: 1000px;
+}
+
+.menu {
+  height: 70px;
+  /*IMPORTANTE*/
+  justify-content: center;
+  align-items: center;
+}
+
 .father {
-  height: 800px;
+  height: 40px;
   /*IMPORTANTE*/
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.soon {
-  width: 700px;
+.border1 {
+  border: solid .5em;
+  padding: .5em;
+   
+  /* non-essential, just to prettify the thing */
+  margin:  auto;
+  width: 80%; height: 610px;
+  text-align: center;
+  display: block
+}
+.border2{
+  background: white;
+  text-align: left;
+  background: whitesmoke;
 }
 
-.father3 {
-  height: 900px;
+.soon1 {
   display: flex;
   justify-content: center;
   align-items: center;
-  
 }
-.soon3 {
-  width: 1000px;
+.soon2 {
+  width: 700px;
+}
+.example-viewport {
+  height: 510px;
+  padding: 2em;
+  border: 1px solid black;
+  justify-content: center;
+  align-items: center;
+}
+.father3 {
+  height: 100%;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+.example-margin {
+  margin: 0 10px;
 }

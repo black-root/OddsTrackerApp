@@ -1,11 +1,41 @@
-<app-menu></app-menu>
-<div class="father" [hidden]="hideLeagueComponent">
-  <div class="shadow p-3 mb-5 bg-white rounded soon">
-    <app-form-upcoming-event></app-form-upcoming-event>
-  </div>
+<div class="menu">
+  <app-menu></app-menu>
 </div>
-<div class="father3" *ngIf="hideLeagueComponent">
-  <div class="shadow p-3 mb-5 bg-white rounded soon3">
-    <app-table-odds-in-play></app-table-odds-in-play>
+<div class="border1">
+  <div class="border2">
+    <mat-tab-group>
+      <mat-tab label="Configuration">
+        <div class="soon1">
+          <div class="soon2">
+            <app-form-upcoming-event></app-form-upcoming-event>
+          </div>
+        </div>
+      </mat-tab>
+      <mat-tab label="Match Progress">
+        <blockquote class="blockquote text-center">
+          <p class="mb-0">Deutsche Sporthochschule Koln</p>
+          <footer class="blockquote-footer">Live Match <br><strong>League:</strong> {{headerTeams.leagueUp}} <br><cite
+              title="Source Title">
+              <strong>Teams:</strong> {{headerTeams.homeUp}} - {{headerTeams.awayUp}} <br>
+            </cite></footer><span #score></span>
+          <br><strong><span #inPlayTime></span></strong>
+        </blockquote>
+        <div>
+          <div class="spinner-border text-danger" role="status">
+            <span class="sr-only">Loading...</span>
+          </div>
+          Match starts in: <span #timeToWait>00:00:00</span>
+
+        </div>
+        <p>Progress time to stop tracking this match.</p>
+        <p>
+          <ngb-progressbar #count [value]="0" type="info">0%</ngb-progressbar>
+        </p>
+        <div class="example-button-row">
+            <button type="button" class="btn btn-danger" (click) = "stopTrackingEvent()" >Stop</button>
+            <button type="button" class="btn btn-dark" (click)="exportAsXLSX()">Export Excel</button>          
+        </div>
+      </mat-tab>
+    </mat-tab-group>
   </div>
 </div>

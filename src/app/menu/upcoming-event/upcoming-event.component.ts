@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, ElementRef, ViewChild, Renderer2, NgZone } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, ElementRef, ViewChild, Renderer2, NgZone, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TrackOddsService } from '../track-odds/track-odds.service';
 import { UpcomingEventService } from './upcoming-event.service';
@@ -14,6 +14,7 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './upcoming-event.component.html',
   styleUrls: ['./upcoming-event.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
 })
 export class UpcomingEventComponent implements OnInit {
   isLinear = false;
@@ -23,23 +24,31 @@ export class UpcomingEventComponent implements OnInit {
   headerTeams: { leagueUp: string, homeUp: string, awayUp: string } = { leagueUp: null, homeUp: null, awayUp: null };
   //score: string = null;
   matchTime: any = null;
-  //count: number = 0;
+  count: number = 0;
   timeToWait: number;
   matchProgressFlag: boolean = false;
   progressSpiner: number = 0;
   inPlayGameStat: any;
+  buttonStopFlag: boolean = false;
   //inPlayTime: any;
   // timefeik: NgbTimeStruct = {hour: 13, minute: 30, second: 0};
   tempTime: number;
   timeToWaitFlag: boolean = false;
   private unsubscribe: Subject<void> = new Subject();
   private subscription: any;
+  tabGroupFlag: boolean = false;
+  stopButton: boolean = true;
+  exportButton: boolean = true;
+  timeToWaitFlagIf: boolean = true;
+  intervalId: any;
 
   // prueba timer
   @ViewChild('timeToWait') timeToWaitV: ElementRef;
   @ViewChild('score') score: ElementRef;
   @ViewChild('inPlayTime') inPlayTime: ElementRef;
-  @ViewChild('count') count: ElementRef;
+  @ViewChild('countV') countV: ElementRef;
+  @ViewChild('statusMatch') statusMatch: ElementRef;
+
 
   constructor(
     private renderer: Renderer2,
@@ -48,19 +57,40 @@ export class UpcomingEventComponent implements OnInit {
     private config: NgbProgressbarConfig,
     private excelService: ExcelExportService) {
 
+    this.upcomingEvent.tabGroup.subscribe(
+      (tabGroupFlag: boolean) => {
+        this.tabGroupFlag = tabGroupFlag;
+      }
+    );
+    this.upcomingEvent.stopButton.subscribe(
+      (flag: boolean) => {
+
+        this.stopButton = flag;
+      }
+    );
+    this.upcomingEvent.exportButton.subscribe(
+      (flag: boolean) => {
+
+        this.exportButton = flag;
+      }
+    );
+
     this.trackOddsService.inPlayingTime.subscribe(
       (apiTime: any) => {
-        // this.count = count;
-       // this.inPlayTime = apiTime;
         this.renderer.setProperty(this.inPlayTime.nativeElement, 'innerHTML', apiTime);
+      }
+    );
+    this.upcomingEvent.statusInfo.subscribe(
+      (status: any) => {
+        console.log(`The status of the match is ${status}`);
+        this.renderer.setProperty(this.statusMatch.nativeElement, 'innerHTML', status);
       }
     );
     this.trackOddsService.progressInplay.subscribe(
       (count: any) => {
         // this.count = count;
-        //this.count = count;
-        this.renderer.setAttribute(this.count.nativeElement, 'value', `${count}`);
-        //this.renderer.setProperty(this.count.nativeElement, 'innerHTML', count);
+        this.count = count;
+        this.renderer.setProperty(this.countV.nativeElement, 'innerHTML', `${count}%`);
         if (count === 100) {
           //  this.clearFlag = false;
         }
@@ -121,11 +151,11 @@ export class UpcomingEventComponent implements OnInit {
   }
 
   secondsToHms(d) {
-        /*
-        var hDisplay = h > 0 ? h + (h == 1 ? " hour, " : " hours, ") : "";
-        var mDisplay = m > 0 ? m + (m == 1 ? " minute, " : " minutes, ") : "";
-        var sDisplay = s > 0 ? s + (s == 1 ? " second" : " seconds") : "";
-        return hDisplay + mDisplay + sDisplay;*/
+    /*
+    var hDisplay = h > 0 ? h + (h == 1 ? " hour, " : " hours, ") : "";
+    var mDisplay = m > 0 ? m + (m == 1 ? " minute, " : " minutes, ") : "";
+    var sDisplay = s > 0 ? s + (s == 1 ? " second" : " seconds") : "";
+    return hDisplay + mDisplay + sDisplay;*/
 
     if (d != null && d > 0) {
       d = Number(d);
@@ -141,7 +171,7 @@ export class UpcomingEventComponent implements OnInit {
     if (this.timeToWaitFlag === false) {
       this.timeToWaitFlag = true;
 
-      let intervalId = setInterval(() => {
+      this.intervalId = setInterval(() => {
         this.timeToWait = this.timeToWait - 1;
         //console.log(this.timeToWait);
         let time = this.secondsToHms(this.timeToWait);
@@ -153,11 +183,9 @@ export class UpcomingEventComponent implements OnInit {
         /*this.time.hour = this.secondsToHms(waitTime).hour;
         this.time.minute = this.secondsToHms(waitTime).minute;
         this.time.second = this.secondsToHms(waitTime).second;*/
-        if (this.timeToWait <= 0) {
-          clearInterval(intervalId);
-          this.unsubscribe.next();
-          this.unsubscribe.complete();
-          this.subscription.unsubscribe();
+        if (this.timeToWait < 0) {
+          clearInterval(this.intervalId);
+          this.timeToWaitFlagIf = false;
         }
         if (this.timeToWait >= 0) {
           this.renderer.setProperty(this.timeToWaitV.nativeElement, 'innerHTML', result);
@@ -173,7 +201,10 @@ export class UpcomingEventComponent implements OnInit {
     this.excelService.exportAsExcelFile(this.inPlayGameStat, 'sample');
   }
   stopTrackingEvent() {
-    this.upcomingEvent.stopTrackingFlag.emit(true);
+    this.trackOddsService.stopTrackingFlag.emit(true);
+    this.upcomingEvent.stopButton.emit(true);
+    this.stopButton = true;
+    this.exportButton = true;
     //this.clearFlag = false;
     //this.onlyButonStopFlag = true;
   }

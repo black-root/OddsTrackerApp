@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { DataService } from 'src/app/services/data.service';
 import { InplayFilter, LeagueSelected, OnlyLeagues } from './inplay-filter.model';
 import { TrackOddsService } from '../track-odds.service';
@@ -6,11 +6,14 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { InPlayGame } from './table-odds-inplay.model';
 import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
+import { MatSnackBar } from '@angular/material';
+
 
 @Component({
   selector: 'app-league-combobox',
   templateUrl: './league-combobox.component.html',
-  styleUrls: ['./league-combobox.component.css']
+  styleUrls: ['./league-combobox.component.css'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class LeagueComboboxComponent implements OnInit {
 
@@ -34,7 +37,7 @@ export class LeagueComboboxComponent implements OnInit {
   positionWin2: number;
   tabGroupFlag: boolean = true;
   stopTrackingFlag: boolean;
-
+  durationInSeconds = 5;
   //table
   // variable is necesary to stop the suscription
   private unsubscribe: Subject<void> = new Subject();
@@ -42,7 +45,12 @@ export class LeagueComboboxComponent implements OnInit {
   count: number = 0;
   inPlayGameStat: InPlayGame[] = [];
 
-  constructor(private formBuilder: FormBuilder, private dataService: DataService, private trackOddsService: TrackOddsService) {
+  constructor(
+    private formBuilder: FormBuilder,
+    private dataService: DataService,
+    private trackOddsService: TrackOddsService,
+    private snackBar: MatSnackBar) {
+   
     this.trackOddsService.tabGroup.subscribe(
       (tabGroupFlag: boolean) => {
         // this.count = count;
@@ -56,7 +64,11 @@ export class LeagueComboboxComponent implements OnInit {
       }
     );
   }
-
+  openSnackBar() {
+    this.snackBar.openFromComponent(StartPartyComponent, {
+      duration: this.durationInSeconds * 1000,
+    });
+  }
   hideComponent() {
     this.trackOddsService.hideLeagueComponent.emit(true);
   }
@@ -305,6 +317,14 @@ export class LeagueComboboxComponent implements OnInit {
     console.log(`El tiempo de Bet365 es ${minutes}:${t3.getSeconds()} `);
     return `${minutes}:${t3.getSeconds()}`;
   }
-
 }
-
+@Component({
+  selector: 'start-bar-component-snack',
+  templateUrl: 'start.html',
+  styles: [`
+    .example-start-party {
+      color: hotpink;
+    }
+  `],
+})
+export class StartPartyComponent {}

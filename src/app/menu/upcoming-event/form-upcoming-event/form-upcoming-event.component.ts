@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DataService } from 'src/app/services/data.service';
 import { UpcomingEvent } from './upcoming-event.model';
@@ -9,11 +9,13 @@ import { takeUntil } from 'rxjs/operators';
 import { InPlayGame } from '../../track-odds/league-combobox/table-odds-inplay.model';
 import { UpcomingEventService } from '../upcoming-event.service';
 import { NgbTimeStruct } from '@ng-bootstrap/ng-bootstrap';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-form-upcoming-event',
   templateUrl: './form-upcoming-event.component.html',
-  styleUrls: ['./form-upcoming-event.component.css']
+  styleUrls: ['./form-upcoming-event.component.css'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class FormUpcomingEventComponent implements OnInit {
 
@@ -42,12 +44,18 @@ export class FormUpcomingEventComponent implements OnInit {
   stopTrackingFlag: boolean;
   upcomingTime: Date;
   leagueId: number;
+  status: number;
+  matches: UpcomingEvent[] = [];
+  m: UpcomingEvent[];
+  durationInSeconds = 5;
+  startButtonFlag: boolean;
 
   constructor(
     private formBuilder: FormBuilder,
     private dataService: DataService,
     private trackOddsService: TrackOddsService,
-    private upcomingService: UpcomingEventService) {
+    private upcomingService: UpcomingEventService,
+    private snackBar: MatSnackBar) {
 
     this.trackOddsService.stopTrackingFlag.subscribe(
       (stopTrackingFlag: boolean) => {
@@ -55,6 +63,13 @@ export class FormUpcomingEventComponent implements OnInit {
         this.stopTrackingFlag = stopTrackingFlag;
       }
     );
+    this.upcomingService.stopButton.subscribe(
+      (flag: boolean) => {
+        // this.count = count;
+        this.startButtonFlag = flag;
+      }
+    );
+
   }
 
   ngOnInit() {
@@ -156,21 +171,17 @@ export class FormUpcomingEventComponent implements OnInit {
 
   startInplayGame() {
     if (this.FI != null && this.FI !== 0 && this.intervalTimefrm > 0) {
-
+      this.upcomingService.tabGroup.emit(true);
+      let countCheckData: number = 0;
+      let interval2 = this.intervalTimefrm;
+      this.checkStatusMatch(this.FI, this.leagueId, this.upcomingTime);
       this.upcomingService.timeToWaitSeconds.emit(this.waitTime);
+      this.upcomingService.startButtonFlag.emit(true);
+      this.startButtonFlag = true;
 
       this.leagueChoosed = false;
       this.intervalTimefrm = this.intervalTimefrm * 1000;
       this.waitTime = this.waitTime * 1000;
-      /*
-       le a;
-       let deployTable = setTimeout(() => {
-         if () {
-           this.trackOddsService.hideLeagueComponent.emit(true);
-         }
-       }, this.waitTime);*/
-
-      // Will resolve after 200ms
 
       console.log(`FI: ${this.FI}, Interval Time: ${this.intervalTimefrm}`);
       console.log('[takeUntil] ngOnInit');
@@ -178,8 +189,36 @@ export class FormUpcomingEventComponent implements OnInit {
         this.FI, this.waitTime, this.intervalTimefrm)
         .pipe(takeUntil(this.unsubscribe))
         .subscribe(data => {
-          let status: number = this.checkStatusMatch(this.FI, this.leagueId, this.upcomingTime);
-          if (status === 1) {
+          if (this.status != 1) {
+            if (interval2 >= 1 && interval2 <= 7) {
+              if (countCheckData % 14 == 0) {
+                this.checkStatusMatch(this.FI, this.leagueId, this.upcomingTime);
+              }
+            } else if (interval2 >= 7 && interval2 <= 14) {
+              if (countCheckData % 2 == 0) {
+                this.checkStatusMatch(this.FI, this.leagueId, this.upcomingTime);
+              }
+            } else if (interval2 >= 15) {
+              this.checkStatusMatch(this.FI, this.leagueId, this.upcomingTime);
+            }
+            console.log(`status code != 1, status: ${status}`);
+          } else if (this.status == 1) {
+            // aproximate 100 minutes = 6000seconds
+            let result = 6000 / interval2;
+            if (result < countCheckData) {
+              if (countCheckData % 10 == 0) {
+                this.checkStatusMatch(this.FI, this.leagueId, this.upcomingTime);
+                console.log('status code = 1');
+              }
+            }
+          }
+          // It does that the request limit from the API doesn't finish 3600reqs/h
+          /* if (countCheckData % 2 == 0) {
+             this.checkStatusMatch(this.FI, this.leagueId, this.upcomingTime);
+             console.log(`Data checked, status: ${this.status}`);
+           }*/
+          countCheckData++;
+          if (this.status == 1) {
             // TU: any, TT: any, TM: any, TS: any
             this.upcomingService.statusInfo.emit("In Play");
             this.trackOddsService.nameLeagueSelected.emit({
@@ -207,36 +246,43 @@ export class FormUpcomingEventComponent implements OnInit {
               data['results'][0][0]['TM'],
               data['results'][0][0]['TS']));
             this.trackOddsService.inPlayGame.emit(this.inPlayGameStat);
+            this.upcomingService.stopButton.emit(false);
+            this.upcomingService.exportButton.emit(false);
             console.log(this.inPlayGameStat);
             if (this.count === 1) {
               this.trackOddsService.hideLeagueComponent.emit(true);
             }
-
             this.trackOddsService.progressInplay.emit(this.progressBarPercent(this.count, this.maxRequest));
-            this.count++;
+
             // this.storeArray[this.count] = data;
-            if (this.count >= this.maxRequest || this.stopTrackingFlag === true) {// a los 10 segundos se detiene
+            if (this.stopTrackingFlag === true || this.count >= this.maxRequest) {// a los 10 segundos se detiene
               this.trackOddsService.progressInplay.emit(this.progressBarPercent(this.count, this.maxRequest));
               this.stopSubscribe();
               this.count = 0;
               // se envia el array al servcio
             }
-          } else if (status === 3) {
+            this.count++;
+          } else if (this.status == 3) {
             this.stopSubscribe();
             this.upcomingService.statusInfo.emit("Ended");
-          } else if (status === 0) {
+          } else if (this.status == 0) {
             this.upcomingService.statusInfo.emit("Not Started");
-          } else if (status === 4) {
+          } else if (this.status === 4) {
+            this.stopSubscribe();
             this.upcomingService.statusInfo.emit("Postponed");
-          } else if (status === 5) {
+          } else if (this.status === 5) {
+            this.stopSubscribe();
             this.upcomingService.statusInfo.emit("Cancelled");
-          } else if (status === 7) {
+          } else if (this.status === 7) {
+            this.stopSubscribe();
             this.upcomingService.statusInfo.emit("Walkover");
-          } else if (status === 8) {
+          } else if (this.status === 8) {
             this.upcomingService.statusInfo.emit("Interrupted");
-          } else if (status === 9) {
+          } else if (this.status === 9) {
+            this.stopSubscribe();
             this.upcomingService.statusInfo.emit("Retired");
-          } else if (status === 99) {
+          } else if (this.status === 99) {
+            this.stopSubscribe();
             this.upcomingService.statusInfo.emit("Removed");
           }
         }, (error) => console.error(error));
@@ -313,15 +359,16 @@ export class FormUpcomingEventComponent implements OnInit {
     this.subscription.unsubscribe();
     console.log('[takeUntil] complete');
   }
-  dateWithOutSimbol(date: Date): number {
+  dateWithOutSimbol(date: Date): any {
     let onlyDate = date.toISOString().split('T')[0];
-    let result: number = Number(onlyDate.split("-"));
-    return result;
+    console.log(onlyDate);
+    let result = onlyDate.split("-");
+    console.log(`Date with out simbols yyyymmdd: ${result}`);
+    return `${result[0]}${result[1]}${result[2]}`;
   }
   // https://betsapi.com/docs/GLOSSARY.html time_status
-  checkStatusMatch(FI: number, leagueId: number, day: any): number {
+  checkStatusMatch(FI: number, leagueId: number, day: any) {
     if ((FI != null && FI > 0) && (leagueId != null && leagueId > 0) && day != null) {
-      let matches: UpcomingEvent[] = [];
       let status: number;
       /*
       0	Not Started
@@ -336,21 +383,38 @@ export class FormUpcomingEventComponent implements OnInit {
       9	Retired
       99	Removed*/
       let onlydate = this.dateWithOutSimbol(day);
+      console.log(onlydate);
       this.dataService.getSoccerUpcomingEventLeagueByDay(leagueId, onlydate)
         .subscribe(data => {
-          matches = data['results'];
+          this.matches = data['results'];
+          //console.log(this.matches);
           // tslint:disable-next-line:prefer-for-of
-          for (let i = 0; i < matches.length; i++) {
-            if (matches[i].id === FI) {
-              status = matches[i].time_status;
+          for (let i = 0; i < this.matches.length; i++) {
+            if (this.matches[i].id == FI) {
+              this.status = this.matches[i]['time_status'];
+              this.upcomingService.status.emit(this.status);
+              console.log(this.status);
+              // this.upcomingService.matches.emit(this.matches);
             }
           }
         });
-      try {
-        return status;
-      } catch (error) {
-        console.log(`Problema con el status ${error}`);
-      }
     }
   }
+  openSnackBar() {
+    this.snackBar.openFromComponent(StartPartyComponentUpcoming, {
+      duration: this.durationInSeconds * 1000,
+    });
+  }
 }
+@Component({
+  // tslint:disable-next-line:component-selector
+  selector: 'start-bar-component-snack-upcoming',
+  templateUrl: 'start-upcoming.html',
+  styles: [`
+    .example-start-party {
+      color: hotpink;
+    }
+  `],
+})
+// tslint:disable-next-line:component-class-suffix
+export class StartPartyComponentUpcoming { }

@@ -27,13 +27,15 @@ import { TrackOddsService } from './menu/track-odds/track-odds.service';
 import { UpcomingEventService } from './menu/upcoming-event/upcoming-event.service';
 
 import {MatButtonModule} from '@angular/material/button';
-import { PruebaComponent } from './prueba/prueba.component';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import { CountdownService } from './services/countdown.service';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { DocumentationComponent } from './menu/documentation/documentation.component'
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
@@ -45,7 +47,7 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
     TableOddsInPlayComponent,
     UpcomingEventComponent,
     FormUpcomingEventComponent,
-    PruebaComponent
+    DocumentationComponent
   ],
   imports: [
     BrowserModule,
@@ -65,7 +67,9 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
     MatProgressBarModule,
     NgbModule,
     MatButtonToggleModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatTooltipModule,
+    MatSnackBarModule
 
   ],
   providers: [CountdownService, DataService, UpcomingEventService, Subject, ExcelExportService, TrackOddsService,

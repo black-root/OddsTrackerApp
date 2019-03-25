@@ -29,3 +29,6 @@
   .example-item {
     height: 30px;
   }
+  .example-tooltip-red {
+    background: #b71c1c;
+  }

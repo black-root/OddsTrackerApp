@@ -3,7 +3,7 @@
   <mat-step [stepControl]="firstFormGroup">
     <form [formGroup]="firstFormGroup">
       <ng-template matStepLabel>Select a League</ng-template>
-      <mat-form-field id="selectLeague">
+      <mat-form-field id="selectLeague" matTooltipClass="example-tooltip-red" matTooltip="Becareful!!! You only can find here leagues that they are going to play before than 10min to the actual time, after that, You can find this match in the seccion In-play in this aplicaction">
         <mat-select placeholder="League" formControlName="firstCtrl">
           <mat-option *ngFor="let league of onlyLeagues" (click)="getLeagueIdSelected(league.id)" value="valid">
             {{league.name}}
@@ -49,7 +49,7 @@
       <ng-template matStepLabel>Frecuency Time</ng-template>
       <mat-form-field>
         <input matInput type="number" formControlName="threeCtrl" [(ngModel)]="intervalTimefrm"
-          placeholder="Type a time in seconds" required>
+          placeholder="Type a time in seconds" required [disabled]="startButtonFlag">
       </mat-form-field>
       <div>
         <button mat-button color="accent" matStepperPrevious>Back</button>
@@ -63,7 +63,7 @@
       <ng-template matStepLabel>Request Limit</ng-template>
       <mat-form-field>
         <input matInput type="number" formControlName="fourCtrl" [(ngModel)]="maxRequest"
-          placeholder="Type an max Request number" required [disabled]="!tabGroupFlag">
+          placeholder="Type an max Request number" required [disabled]="startButtonFlag"> 
       </mat-form-field>
       <div>
         <button mat-button color="accent" matStepperPrevious>Back</button>
@@ -77,8 +77,9 @@
     You are now done.
     <div>
       <button mat-button color="accent" matStepperPrevious>Back</button>
-      <button mat-button color="accent" matStepperPrevious (click)="stepper.reset()">Reset</button>
-      <button mat-button color="primary" (click)="startInplayGame()">Start</button>
+      <button mat-button color="accent" matStepperPrevious (click)="stepper.reset()"
+        [disabled]="startButtonFlag">Reset</button>
+      <button mat-button color="primary" (click)="startInplayGame()" [disabled]="startButtonFlag">Start</button>
     </div>
   </mat-step>
 </mat-vertical-stepper>

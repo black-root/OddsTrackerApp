@@ -170,7 +170,6 @@ export class UpcomingEventComponent implements OnInit {
   progressTimeToWait(): any {
     if (this.timeToWaitFlag === false) {
       this.timeToWaitFlag = true;
-
       this.intervalId = setInterval(() => {
         this.timeToWait = this.timeToWait - 1;
         //console.log(this.timeToWait);

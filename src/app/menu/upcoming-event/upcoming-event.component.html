@@ -26,11 +26,7 @@
             <span class="sr-only">Loading...</span>
           </div>
           Match starts in: <span #timeToWait>00:00:00</span>
-        </div>
-        <p>Progress time to stop tracking this match.</p>
-        <p>
-          <ngb-progressbar [value]="count" type="info" #countV>0%</ngb-progressbar>
-        </p>
+        </div><br><hr>
         <div class="example-button-row">
           <button type="button" class="btn btn-danger" (click)="stopTrackingEvent()"
             [disabled]="stopButton">Stop</button>
